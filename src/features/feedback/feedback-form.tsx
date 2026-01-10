@@ -30,7 +30,7 @@ export function FeedbackForm() {
 } = useForm<FeedbackFormValues>({
   resolver: zodResolver(feedbackSchema),
   defaultValues: {
-    source: 'SITE_FORM',
+    source: 'SITE',
   },
 });
 

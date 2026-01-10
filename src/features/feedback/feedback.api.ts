@@ -1,9 +1,7 @@
 import { config } from '@/lib/config';
 import { FeedbackFormValues } from './feedback.schema';
 
-export async function createFeedback(
-  payload: FeedbackFormValues,
-): Promise<void> {
+export async function createFeedback(payload: FeedbackFormValues) {
   const res = await fetch(`${config.apiUrl}/feedback`, {
     method: 'POST',
     headers: {
@@ -13,6 +11,9 @@ export async function createFeedback(
   });
 
   if (!res.ok) {
-    throw new Error('Failed to create feedback');
+    const error = await res.json(); // ⬅️ ВАЖНО
+    console.error('Backend validation error:', error);
+    throw new Error(JSON.stringify(error));
   }
 }
+

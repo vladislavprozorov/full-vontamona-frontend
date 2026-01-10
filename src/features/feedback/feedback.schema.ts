@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 export const PHONE_MASK_REGEX =
   /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+export const FeedbackSource = {
+  SITE: 'SITE',
+  PAC_WIDGET: 'PAC_WIDGET',
+} as const;
 
 export const feedbackSchema = z.object({
   name: z
@@ -18,7 +22,7 @@ export const feedbackSchema = z.object({
     .max(500)
     .optional(),
 
-  source: z.literal('SITE_FORM'),
+  source: z.literal(FeedbackSource.SITE),
 });
 
 export type FeedbackFormValues = z.infer<typeof feedbackSchema>;
