@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruise Widget</title>
+    
+    <!-- Cruise Widget CSS -->
+    <link rel="stylesheet" href="https://widget.gocruise.ru/css/app.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        #ces {
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cruise Widget Settings -->
+    <script>
+        cesSettings = {
+            email: "info@vontamona.com",  // ОБЯЗАТЕЛЬНЫЙ параметр!
+            currencies: ["RUB", "USD", "EUR"],
+            defaultVendor: "MSC",
+            showResults: false
+        };
+        console.log("✅ cesSettings установлены:", cesSettings);
+    </script>
+    
+    <!-- Cruise Widget Container -->
+    <div id="ces"></div>
+    
+    <!-- Cruise Widget JS -->
+    <script src="https://widget.gocruise.ru/js/app.js"></script>
+    
+    <script>
+        // Отправляем событие родителю, когда виджет загрузился
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const widget = document.querySelector('.ces-app');
+                if (widget) {
+                    console.log("✅ Виджет загружен в iframe");
+                    window.parent.postMessage({ type: 'widget-loaded', success: true }, '*');
+                } else {
+                    console.error("❌ Виджет не загрузился");
+                    window.parent.postMessage({ type: 'widget-loaded', success: false }, '*');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
