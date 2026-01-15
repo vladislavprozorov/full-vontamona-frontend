@@ -1,5 +1,8 @@
 import { Header } from '@/components/layout/header/header';
 import { Hero } from '@/components/sections/hero';
+import { BenefitsSection } from '@/components/sections/benefits';
+import { CompanyFactsSection } from '@/components/sections/company-facts';
+import { SectionDivider } from '@/components/ui/section-divider';
 import { PacWidget } from '@/features/pac-widget/pac-widget';
 import { FeedbackForm } from '@/features/feedback/feedback-form';
 import { Button } from '@/components/ui/button';
@@ -14,6 +17,15 @@ export default function HomePage() {
       <main>
         {/* HERO */}
         <Hero />
+
+        {/* BENEFITS - Почему мы? */}
+        <BenefitsSection />
+
+        {/* COMPANY FACTS */}
+        <CompanyFactsSection />
+
+        {/* DIVIDER */}
+        <SectionDivider />
 
         {/* PAC WIDGET */}
         <PacWidget /> 
