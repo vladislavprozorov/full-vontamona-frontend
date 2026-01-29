@@ -12,6 +12,11 @@ export const MOTION = {
   // Interactions
   microConfirmation: 200,
   hover: 150,
+  selectDelay: 450, // 🔥 UX контракт: пауза перед переходом
+  selectInstant: 75, // 🔥 Instant feedback на клик
+  
+  // Submit
+  minSubmitDelay: 400, // 🔥 Минимальная видимость спиннера (perceived quality)
   
   // States
   fadeIn: 200,

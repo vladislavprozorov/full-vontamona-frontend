@@ -5,13 +5,15 @@
  * Thin orchestrator — никакой бизнес-логики
  */
 
-import { useReducer, useEffect, useState } from 'react';
+import { useReducer, useEffect, useState, useCallback } from 'react';
 import {
   quizReducer,
   initialState,
   loadDraft,
-  saveDraft,
+  saveDraftDebounced,
+  saveDraftImmediate,
   submitQuiz,
+  MOTION, // 🔥 Import motion tokens
   type QuizState,
   type QuizEvent,
   type Priority,
@@ -30,53 +32,73 @@ export function useQuiz() {
     }
   }, []);
 
-  // Auto-save
+  // Auto-save (debounced для performance)
   useEffect(() => {
-    saveDraft(state);
+    saveDraftDebounced(state);
+  }, [state]);
+
+  // Immediate save on unmount (не потеряем данные)
+  useEffect(() => {
+    return () => {
+      saveDraftImmediate(state);
+    };
   }, [state]);
 
   // Restore draft
-  const restoreDraft = () => {
+  const restoreDraft = useCallback(() => {
     const draft = loadDraft();
     if (draft) {
       dispatch({ type: 'RESTORE_DRAFT', state: draft.state });
       setShowRestoreDialog(false);
     }
-  };
+  }, []);
 
   // Start fresh
-  const startFresh = () => {
+  const startFresh = useCallback(() => {
     dispatch({ type: 'START_FRESH' });
     setShowRestoreDialog(false);
-  };
+  }, []);
 
   // Navigation
-  const goToNextStep = () => {
+  const goToNextStep = useCallback(() => {
     dispatch({ type: 'NEXT' });
-  };
+  }, []);
 
-  const goToPrevStep = () => {
+  const goToPrevStep = useCallback(() => {
     dispatch({ type: 'PREV' });
-  };
+  }, []);
 
   // Option selection with visual feedback
-  const handleOptionSelect = (eventType: QuizEvent['type'], value: any) => {
+  const handleOptionSelect = useCallback((eventType: QuizEvent['type'], value: any) => {
+    // 🎯 Haptic feedback (вибрация на поддерживаемых устройствах)
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10); // Короткая вибрация 10ms
+    }
+    
     setSelectingOption(value);
     
     setTimeout(() => {
       dispatch({ type: eventType, value } as QuizEvent);
       setSelectingOption(null);
-    }, 200); // micro-confirmation delay
-  };
+    }, MOTION.selectDelay); // � UX контракт из motion tokens
+  }, []);
 
   // Priority toggle
-  const togglePriority = (priority: Priority) => {
+  const togglePriority = useCallback((priority: Priority) => {
     dispatch({ type: 'TOGGLE_PRIORITY', value: priority });
-  };
+  }, []);
 
   // Submit handler
-  const submitContacts = async (contactsData: { name: string; phone?: string; email?: string }) => {
-    // Update contacts first
+  const submitContacts = useCallback(async (contactsData: { name: string; phone?: string; email?: string }) => {
+    // 🔥 Сначала подготовим полные данные
+    const completeFormData = {
+      ...state.formData,
+      name: contactsData.name,
+      phone: contactsData.phone,
+      email: contactsData.email,
+    };
+
+    // Update contacts в state
     dispatch({
       type: 'UPDATE_CONTACTS',
       name: contactsData.name,
@@ -84,22 +106,31 @@ export function useQuiz() {
       email: contactsData.email,
     });
 
-    // Submit
+    // Submit с ПОЛНЫМИ данными
     dispatch({ type: 'SUBMIT_REQUEST' });
     
-    const result = await submitQuiz(state.formData);
+    // 🎯 Smart delay для видимости спиннера (UX: perceived performance)
+    // Если API быстрый → добавляем задержку
+    // Если медленный → не тормозим дополнительно
+    const start = performance.now();
+    const result = await submitQuiz(completeFormData);
+    const elapsed = performance.now() - start;
+    
+    if (elapsed < MOTION.minSubmitDelay) {
+      await new Promise(resolve => setTimeout(resolve, MOTION.minSubmitDelay - elapsed));
+    }
 
     if (result.success) {
       dispatch({ type: 'SUBMIT_SUCCESS', applicationId: result.applicationId! });
     } else {
       dispatch({ type: 'SUBMIT_ERROR', message: result.error! });
     }
-  };
+  }, [state.formData]);
 
   // Retry submit
-  const retrySubmit = (contactsData: { name: string; phone?: string; email?: string }) => {
+  const retrySubmit = useCallback((contactsData: { name: string; phone?: string; email?: string }) => {
     submitContacts(contactsData);
-  };
+  }, [submitContacts]);
 
   return {
     // State

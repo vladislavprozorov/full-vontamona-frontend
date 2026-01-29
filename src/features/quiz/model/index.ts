@@ -52,7 +52,7 @@ export { MOTION, getDuration } from './quiz.motion';
 export { quizReducer, initialState } from './quiz.reducer';
 
 // Effects
-export { saveDraft, loadDraft, clearDraft } from './quiz.persistence';
+export { saveDraftDebounced, saveDraftImmediate, loadDraft, clearDraft } from './quiz.persistence';
 export { submitQuiz } from './quiz.submit';
 
 // Selectors

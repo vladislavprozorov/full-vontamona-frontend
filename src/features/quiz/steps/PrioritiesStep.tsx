@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { PRIORITY_OPTIONS, type Priority } from '../model';
 
 interface PrioritiesStepProps {
@@ -7,7 +8,7 @@ interface PrioritiesStepProps {
   suggestedPriorities: Priority[];
 }
 
-export function PrioritiesStep({ selectedPriorities, onToggle, onNext, suggestedPriorities }: PrioritiesStepProps) {
+export const PrioritiesStep = memo(function PrioritiesStep({ selectedPriorities, onToggle, onNext, suggestedPriorities }: PrioritiesStepProps) {
   return (
     <div className="space-y-4 md:space-y-5">
       <div>
@@ -71,4 +72,4 @@ export function PrioritiesStep({ selectedPriorities, onToggle, onNext, suggested
       </div>
     </div>
   );
-}
+});

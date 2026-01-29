@@ -1,12 +1,11 @@
-/**
- * Quiz Submit Layer
- * 
- * Ответственность: API operations
- * Изолирует бизнес-логику от сетевых вызовов
- */
-
 import type { QuizFormData } from './quiz.machine';
-import { createFeedback } from '../../feedback/feedback.api';
+import {
+  getLabelForDateRange,
+  getLabelForBudget,
+  getLabelForTravelers,
+  getLabelForRegion,
+  getLabelForPriority,
+} from './quiz.domain';
 
 export interface SubmitResult {
   success: boolean;
@@ -27,21 +26,42 @@ export async function submitQuiz(formData: QuizFormData): Promise<SubmitResult> 
       };
     }
 
-    // Отправка через feedback API
-    await createFeedback({
+    // Конвертируем domain types → labels для API
+    const payload = {
+      dates: formData.dateRange ? getLabelForDateRange(formData.dateRange) : undefined,
+      budget: formData.budget ? getLabelForBudget(formData.budget) : undefined,
+      travelers: formData.travelers ? getLabelForTravelers(formData.travelers) : undefined,
+      region: formData.region ? getLabelForRegion(formData.region) : undefined,
+      priorities: formData.priorities.map(getLabelForPriority),
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
-      source: 'SITE',
-      message: `Quiz: ${formData.dateRange}, ${formData.budget}, ${formData.travelers}, ${formData.region}, ${formData.priorities.join(', ')}`,
+      source: 'quiz-form',
+    };
+
+    // Отправка на /api/quiz
+    const response = await fetch('/api/quiz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
     });
 
-    // Генерируем ID заявки (или получаем с бэка, если API вернёт)
-    const applicationId = `CR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Quiz submit failed:', errorText);
+      return {
+        success: false,
+        error: 'Ошибка отправки. Попробуйте позже.',
+      };
+    }
 
+    const result = await response.json();
+    
     return {
       success: true,
-      applicationId,
+      applicationId: result.applicationId || `CR-${Date.now()}`,
     };
   } catch (error) {
     console.error('Quiz submit failed:', error);

@@ -11,9 +11,23 @@ export async function createFeedback(payload: FeedbackFormValues) {
   });
 
   if (!res.ok) {
-    const error = await res.json(); // ⬅️ ВАЖНО
-    console.error('Backend validation error:', error);
-    throw new Error(JSON.stringify(error));
+    // Безопасная обработка ошибки (может быть HTML или JSON)
+    let errorMessage = `HTTP ${res.status}: ${res.statusText}`;
+    
+    try {
+      const contentType = res.headers.get('content-type');
+      if (contentType?.includes('application/json')) {
+        const error = await res.json();
+        errorMessage = error.message || JSON.stringify(error);
+      } else {
+        const text = await res.text();
+        console.error('API error (non-JSON):', text.substring(0, 200));
+      }
+    } catch (parseError) {
+      console.error('Failed to parse error response:', parseError);
+    }
+    
+    throw new Error(errorMessage);
   }
 }
 

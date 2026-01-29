@@ -1,5 +1,5 @@
 export const config = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL!,
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || '/api', // Fallback для development
 };
 export type NavigationItem = {
   label: string;

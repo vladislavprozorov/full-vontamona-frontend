@@ -13,6 +13,8 @@ const STORAGE_KEY = 'quiz-draft';
 const EXPIRY_MS = 3600000; // 1 час
 const VERSION = 1; // 🔥 Инкрементируй при изменении структуры State
 
+let saveTimeout: NodeJS.Timeout | null = null;
+
 export interface SavedDraft {
   version: number;
   state: QuizState;
@@ -20,9 +22,40 @@ export interface SavedDraft {
 }
 
 /**
- * Сохранить черновик
+ * Сохранить черновик (debounced)
+ * Используй эту функцию в useEffect
  */
-export function saveDraft(state: QuizState): void {
+export function saveDraftDebounced(state: QuizState): void {
+  // Отменяем предыдущий таймер
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
+  }
+  
+  // Ставим новый таймер
+  saveTimeout = setTimeout(() => {
+    saveDraftImmediate(state);
+    saveTimeout = null;
+  }, 500); // 500ms debounce
+}
+
+/**
+ * Сохранить черновик немедленно
+ * Используй при unmount или критических моментах
+ */
+export function saveDraftImmediate(state: QuizState): void {
+  // Отменяем pending debounce
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
+    saveTimeout = null;
+  }
+  
+  saveDraft(state);
+}
+
+/**
+ * Внутренняя функция сохранения
+ */
+function saveDraft(state: QuizState): void {
   // Не сохраняем success screen
   if (state.currentStep === 'success') {
     clearDraft();

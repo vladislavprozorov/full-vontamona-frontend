@@ -139,6 +139,7 @@ ${data.priorities.length > 0 ? `⭐ Приоритеты: ${data.priorities.join
           text: message,
           parse_mode: 'HTML',
         }),
+        signal: AbortSignal.timeout(5000), // 🔥 Timeout 5 секунд
       }
     );
 
@@ -303,12 +304,17 @@ export async function POST(request: NextRequest) {
       scoring: `${scoring.emoji} ${scoring.priority} (${scoring.score}/9)`,
     });
 
-    // Отправка в Telegram
-    await sendToTelegram(data, scoring, applicationId);
+    // 🚀 Мгновенный ответ пользователю (не ждём отправки)
+    // Отправка идёт в фоне, не блокирует response
+    Promise.all([
+      sendToTelegram(data, scoring, applicationId),
+      sendToEmail(data, scoring, applicationId),
+    ]).catch(error => {
+      console.error('❌ Background notification error:', error);
+      // Не падаем, логируем для мониторинга
+    });
 
-    // Отправка на Email
-    await sendToEmail(data, scoring, applicationId);
-
+    // Сразу возвращаем успех (не ждём уведомлений)
     return NextResponse.json({
       success: true,
       applicationId,
