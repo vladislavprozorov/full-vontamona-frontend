@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Header } from '@/components/layout/header/header';
-import { Footer } from '@/components/layout/footer';
+import { ConditionalFooter } from '@/components/layout/conditional-footer';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -38,7 +38,7 @@ export default function RootLayout({
       >
         {/* Header теперь на уровне страниц, не глобально */}
         {children}
-        <Footer />
+        <ConditionalFooter />
       </body>
     </html>
   );

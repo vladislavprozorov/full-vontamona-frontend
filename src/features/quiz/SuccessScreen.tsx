@@ -2,15 +2,19 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import type { QuizFormData } from './model';
+import { getPersonalizedSuccessMessage } from './model';
 
 interface SuccessScreenProps {
   applicationId?: string;
   phone?: string;
   email?: string;
+  formData: QuizFormData;
 }
 
-export function SuccessScreen({ applicationId, phone, email }: SuccessScreenProps) {
+export function SuccessScreen({ applicationId, phone, email, formData }: SuccessScreenProps) {
   const [copied, setCopied] = useState(false);
+  const personalizedMessage = getPersonalizedSuccessMessage(formData);
 
   const copyToClipboard = () => {
     if (applicationId) {
@@ -30,7 +34,7 @@ export function SuccessScreen({ applicationId, phone, email }: SuccessScreenProp
             </svg>
           </div>
           <h2 className="text-2xl font-medium text-neutral-900 dark:text-neutral-100 mb-3 leading-tight">
-            Благодарим за доверие
+            {personalizedMessage.title}
           </h2>
           
           {applicationId && (
@@ -62,10 +66,10 @@ export function SuccessScreen({ applicationId, phone, email }: SuccessScreenProp
           )}
           
           <p className="text-[15px] text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed">
-            Мы подбираем круизы вручную, не по шаблону
+            {personalizedMessage.subtitle}
           </p>
           <p className="text-[15px] text-neutral-600 dark:text-neutral-400 mb-2 leading-relaxed">
-            Ваш персональный консультант свяжется с вами <span className="text-neutral-900 dark:text-neutral-100">в течение 2–3 часов</span>
+            Ваш персональный консультант свяжется с вами <span className="text-neutral-900 dark:text-neutral-100">в течение {personalizedMessage.timing}</span>
           </p>
           <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-4">
             Проверьте {phone ? 'телефон' : ''}{phone && email ? ' и ' : ''}{email ? 'почту' : ''}

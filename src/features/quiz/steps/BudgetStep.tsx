@@ -1,8 +1,15 @@
-import { OPTIONS } from '../quiz.constants';
+/**
+ * 💎 BudgetStep — Principal-level
+ * 
+ * Использует DomainOptions вместо строк
+ * Никакого парсинга
+ */
+
+import { BUDGET_OPTIONS, type Budget } from '../model';
 
 interface BudgetStepProps {
-  onSelect: (value: string) => void;
-  selectedValue?: string;
+  onSelect: (value: Budget) => void;
+  selectedValue?: Budget;
   selectingValue?: string | null;
 }
 
@@ -18,14 +25,14 @@ export function BudgetStep({ onSelect, selectedValue, selectingValue }: BudgetSt
         </p>
       </div>
       <div className="grid gap-2.5 md:gap-2">
-        {OPTIONS.budget.map((option) => {
-          const isSelected = selectedValue === option;
-          const isSelecting = selectingValue === option;
+        {BUDGET_OPTIONS.map((option) => {
+          const isSelected = selectedValue === option.value;
+          const isSelecting = selectingValue === option.label;
           return (
             <button
-              key={option}
+              key={option.value}
               type="button"
-              onClick={() => onSelect(option)}
+              onClick={() => onSelect(option.value)}
               disabled={!!selectingValue}
               className={`p-3.5 md:p-3 text-left border rounded-xl transition-all duration-200 ${
                 isSelecting
@@ -40,7 +47,7 @@ export function BudgetStep({ onSelect, selectedValue, selectingValue }: BudgetSt
                   isSelecting 
                     ? 'text-white dark:text-neutral-900' 
                     : 'text-neutral-900 dark:text-neutral-100'
-                }`}>{option}</span>
+                }`}>{option.label}</span>
                 {(isSelected || isSelecting) && (
                   <svg className={`w-6 h-6 transition-all duration-200 ${
                     isSelecting 

@@ -1,126 +1,126 @@
-import { useState } from 'react';
-import { QuizStep, QuizFormData } from './quiz.types';
-import { QUIZ_STEPS } from './quiz.constants';
+/**
+ * 💎 useQuiz — React Integration Layer
+ * 
+ * Ответственность: Координация между React и бизнес-логикой
+ * Thin orchestrator — никакой бизнес-логики
+ */
+
+import { useReducer, useEffect, useState } from 'react';
+import {
+  quizReducer,
+  initialState,
+  loadDraft,
+  saveDraft,
+  submitQuiz,
+  type QuizState,
+  type QuizEvent,
+  type Priority,
+} from './model';
 
 export function useQuiz() {
-  const [currentStep, setCurrentStep] = useState<QuizStep>('dates');
-  const [formData, setFormData] = useState<QuizFormData>({
-    priorities: [],
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [applicationId, setApplicationId] = useState<string>('');
-  const [submitError, setSubmitError] = useState<string>('');
-  const [isReturning, setIsReturning] = useState(false);
-  const [selectingOption, setSelectingOption] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(quizReducer, initialState);
+  const [selectingOption, setSelectingOption] = useState<any>(null);
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false);
 
-  const goToNextStep = () => {
-    const next = QUIZ_STEPS[currentStep].next;
-    if (next) {
-      setCurrentStep(next);
-      setIsReturning(false); // Moving forward = not returning
+  // Load draft on mount
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) {
+      setShowRestoreDialog(true);
     }
+  }, []);
+
+  // Auto-save
+  useEffect(() => {
+    saveDraft(state);
+  }, [state]);
+
+  // Restore draft
+  const restoreDraft = () => {
+    const draft = loadDraft();
+    if (draft) {
+      dispatch({ type: 'RESTORE_DRAFT', state: draft.state });
+      setShowRestoreDialog(false);
+    }
+  };
+
+  // Start fresh
+  const startFresh = () => {
+    dispatch({ type: 'START_FRESH' });
+    setShowRestoreDialog(false);
+  };
+
+  // Navigation
+  const goToNextStep = () => {
+    dispatch({ type: 'NEXT' });
   };
 
   const goToPrevStep = () => {
-    const prev = QUIZ_STEPS[currentStep].prev;
-    if (prev) {
-      setCurrentStep(prev);
-      setIsReturning(true); // Moving back = returning
-    }
+    dispatch({ type: 'PREV' });
   };
 
-  const handleOptionSelect = (field: keyof QuizFormData, value: string) => {
-    setSelectingOption(value); // Visual feedback state
-    setFormData(prev => ({ ...prev, [field]: value }));
+  // Option selection with visual feedback
+  const handleOptionSelect = (eventType: QuizEvent['type'], value: any) => {
+    setSelectingOption(value);
+    
     setTimeout(() => {
-      goToNextStep();
+      dispatch({ type: eventType, value } as QuizEvent);
       setSelectingOption(null);
-    }, 200);
+    }, 200); // micro-confirmation delay
   };
 
-  const togglePriority = (priority: string) => {
-    setFormData(prev => {
-      const current = prev.priorities || [];
-      const newPriorities = current.includes(priority)
-        ? current.filter(p => p !== priority)
-        : [...current, priority];
-      return { ...prev, priorities: newPriorities };
-    });
+  // Priority toggle
+  const togglePriority = (priority: Priority) => {
+    dispatch({ type: 'TOGGLE_PRIORITY', value: priority });
   };
 
+  // Submit handler
   const submitContacts = async (contactsData: { name: string; phone?: string; email?: string }) => {
-    setIsSubmitting(true);
-    setSubmitError('');
+    // Update contacts first
+    dispatch({
+      type: 'UPDATE_CONTACTS',
+      name: contactsData.name,
+      phone: contactsData.phone,
+      email: contactsData.email,
+    });
 
-    try {
-      const response = await fetch('/api/quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          ...formData, 
-          ...contactsData,
-          source: 'Страница /quiz',
-        }),
-      });
+    // Submit
+    dispatch({ type: 'SUBMIT_REQUEST' });
+    
+    const result = await submitQuiz(state.formData);
 
-      if (!response.ok) {
-        throw new Error('Failed to submit');
-      }
-
-      const result = await response.json();
-      if (result.applicationId) {
-        setApplicationId(result.applicationId);
-      }
-
-      setCurrentStep('success');
-    } catch (error) {
-      console.error('Quiz submission error:', error);
-      setSubmitError('Не получилось отправить с первого раза');
-    } finally {
-      setIsSubmitting(false);
+    if (result.success) {
+      dispatch({ type: 'SUBMIT_SUCCESS', applicationId: result.applicationId! });
+    } else {
+      dispatch({ type: 'SUBMIT_ERROR', message: result.error! });
     }
   };
 
+  // Retry submit
   const retrySubmit = (contactsData: { name: string; phone?: string; email?: string }) => {
     submitContacts(contactsData);
   };
 
-  // Smart Defaults: подсказываем варианты на основе предыдущих выборов
-  const getSuggestedPriorities = (): string[] => {
-    const suggestions: string[] = [];
-    
-    // Если высокий бюджет → подсвечиваем "Комфорт и сервис"
-    if (formData.budget === '400 000 ₽+' || formData.budget === '200 000 – 400 000 ₽') {
-      suggestions.push('Комфорт и сервис');
-    }
-    
-    // Если семья с детьми → не подсвечиваем "Минимум детей"
-    if (formData.travelers !== 'Семья с детьми') {
-      // Можно подсветить "Спокойный отдых" для пар
-      if (formData.travelers === 'Пара или семья без детей' || formData.travelers === 'Один/одна') {
-        suggestions.push('Спокойный отдых');
-      }
-    }
-    
-    return suggestions;
-  };
-
   return {
-    currentStep,
-    formData,
-    isSubmitting,
-    applicationId,
-    submitError,
-    isReturning,
+    // State
+    currentStep: state.currentStep,
+    formData: state.formData,
+    isSubmitting: state.isSubmitting,
+    applicationId: state.applicationId,
+    submitError: state.submitError,
+    isReturning: state.isReturning,
     selectingOption,
+    showRestoreDialog,
+    
+    // Actions
+    dispatch,
     goToNextStep,
     goToPrevStep,
     handleOptionSelect,
     togglePriority,
     submitContacts,
     retrySubmit,
-    getSuggestedPriorities,
+    restoreDraft,
+    startFresh,
   };
 }

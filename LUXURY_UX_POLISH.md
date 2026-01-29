@@ -13,6 +13,7 @@
 **Luxury не старается быть заметным.**
 
 **Ключевые решения:**
+
 - ✅ Чистый белый фон (не градиенты, не vignette)
 - ✅ Нет футера (чистый experience)
 - ✅ Едва заметный градиент внутри карточки (`from-white to-neutral-50`)
@@ -23,12 +24,14 @@
 ## ✅ Финальная конфигурация
 
 ### Фон страницы
+
 ```tsx
 // Чистый белый - максимальная прозрачность и доверие
 bg-white dark:bg-neutral-950
 ```
 
 ### Карточка
+
 ```tsx
 // Едва заметный градиент для глубины (почти незаметно)
 bg-linear-to-b from-white to-neutral-50
@@ -41,6 +44,7 @@ border-neutral-100
 ```
 
 ### Layout
+
 ```tsx
 // Нет футера - чистый luxury experience
 // Отдельный layout для /quiz без Footer компонента
@@ -53,19 +57,21 @@ border-neutral-100
 ### 1. **Микро-подтверждение выбора** (самое важное)
 
 **Проблема:**
+
 ```
 Клик → сразу следующий экран
 Мозг не успевает: "Я выбрал это"
 ```
 
 **Решение:**
+
 ```typescript
 // 200ms delay уже был, добавили визуальный акцент
 const [selectingOption, setSelectingOption] = useState<string | null>(null);
 
 const handleOptionSelect = (field, value) => {
   setSelectingOption(value); // 👈 Визуальный feedback
-  setFormData(prev => ({ ...prev, [field]: value }));
+  setFormData((prev) => ({ ...prev, [field]: value }));
   setTimeout(() => {
     goToNextStep();
     setSelectingOption(null);
@@ -74,6 +80,7 @@ const handleOptionSelect = (field, value) => {
 ```
 
 **Визуальный эффект (во время выбора):**
+
 ```css
 /* Кнопка при клике (200ms) */
 bg-neutral-900          /* Инвертированный цвет */
@@ -84,6 +91,7 @@ checkmark scale-110     /* Галочка увеличивается */
 ```
 
 **Психология:**
+
 - ✅ "Да, я это выбрал" → затем "идём дальше"
 - ✅ Микро-удовлетворение
 - ✅ Мозг фиксирует действие
@@ -93,6 +101,7 @@ checkmark scale-110     /* Галочка увеличивается */
 ### 2. **Улучшен фокус карточки**
 
 **До:**
+
 ```tsx
 boxShadow: '0 20px 60px rgba(0,0,0,0.06)'
 border: transparent
@@ -100,18 +109,20 @@ bg: white на светлом фоне
 ```
 
 **После:**
+
 ```tsx
 // Двойная тень (depth + subtle)
-boxShadow: '0 20px 60px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.04)'
+boxShadow: "0 20px 60px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.04)";
 
 // Едва заметная рамка
-border: border-neutral-200/50
+border: border - neutral - 200 / 50;
 
 // Backdrop blur для "подиума"
-backdrop-blur-sm
+backdrop - blur - sm;
 ```
 
 **Результат:**
+
 - ✅ Карточка "на подиуме"
 - ✅ Мягкий контраст (не агрессивный)
 - ✅ Luxury depth
@@ -121,6 +132,7 @@ backdrop-blur-sm
 ### 3. **Добавлена "рамка сценария"**
 
 **Фон страницы:**
+
 ```tsx
 // Был: простой градиент
 bg-linear-to-b from-neutral-50 to-white
@@ -137,6 +149,7 @@ bg-linear-to-b from-neutral-100 via-neutral-50 to-neutral-100
 ```
 
 **Психология:**
+
 - ✅ Не просто "форма на странице"
 - ✅ Это "отдельный опыт"
 - ✅ Сценичность без драматизма
@@ -146,6 +159,7 @@ bg-linear-to-b from-neutral-100 via-neutral-50 to-neutral-100
 ### 4. **Маркер уверенности**
 
 **Добавлен под заголовком:**
+
 ```tsx
 <div className="flex items-center justify-center gap-2 text-xs text-neutral-400">
   <span>Персональный подбор</span>
@@ -155,11 +169,13 @@ bg-linear-to-b from-neutral-100 via-neutral-50 to-neutral-100
 ```
 
 **Психология:**
+
 - ✅ Снижает тревогу
 - ✅ Усиливает premium-ощущение
 - ✅ Повышает конверсию (proven pattern)
 
 **Размер и цвет:**
+
 - `text-xs` — очень маленький (не отвлекает)
 - `text-neutral-400` — едва заметный (subtle)
 - Позиция: под описанием, над формой
@@ -169,18 +185,21 @@ bg-linear-to-b from-neutral-100 via-neutral-50 to-neutral-100
 ### 5. **Вертикальная позиция**
 
 **До:**
+
 ```tsx
 pt-20 md:pt-24  // Слишком низко
 mb-10 md:mb-12  // Много отступа
 ```
 
 **После:**
+
 ```tsx
 pt-12 md:pt-16  // Ближе к визуальному центру (+40-60px вверх)
 mb-8 md:mb-10   // Компактнее
 ```
 
 **Результат:**
+
 - ✅ Карточка в визуальном центре экрана
 - ✅ Особенно заметно на первом шаге
 - ✅ Luxury-паттерн: focus on the card
@@ -190,6 +209,7 @@ mb-8 md:mb-10   // Компактнее
 ## 🎨 Визуальный Flow
 
 ### Момент выбора (200ms)
+
 ```
 1. Клик
    ↓
@@ -203,6 +223,7 @@ mb-8 md:mb-10   // Компактнее
 ```
 
 **Ощущение:**
+
 ```
 "Азия" [клик]
   ↓
@@ -217,15 +238,16 @@ mb-8 md:mb-10   // Компактнее
 
 ## 📊 Сравнение (честно)
 
-| Параметр | До | После |
-|----------|-----|--------|
-| **Микро-feedback** | Галочка появляется | ✅ Кнопка инвертируется + галочка растёт |
-| **Фокус карточки** | 6/10 (тень слабая) | ✅ 9/10 (double shadow + border) |
-| **Сценичность** | 7/10 (просто форма) | ✅ 9/10 (vignette + gradient) |
-| **Тревожность** | Средняя | ✅ Низкая (маркер уверенности) |
-| **Вертикаль** | Чуть низко | ✅ Визуальный центр |
+| Параметр           | До                  | После                                    |
+| ------------------ | ------------------- | ---------------------------------------- |
+| **Микро-feedback** | Галочка появляется  | ✅ Кнопка инвертируется + галочка растёт |
+| **Фокус карточки** | 6/10 (тень слабая)  | ✅ 9/10 (double shadow + border)         |
+| **Сценичность**    | 7/10 (просто форма) | ✅ 9/10 (vignette + gradient)            |
+| **Тревожность**    | Средняя             | ✅ Низкая (маркер уверенности)           |
+| **Вертикаль**      | Чуть низко          | ✅ Визуальный центр                      |
 
 ### Общий балл:
+
 - **Обычные квизы:** 4-5/10
 - **Хорошие SaaS:** 7/10
 - **До полировки:** 8.5/10
@@ -236,12 +258,13 @@ mb-8 md:mb-10   // Компактнее
 ## 🔍 Детали реализации
 
 ### Selecting State (quiz.hooks.ts)
+
 ```typescript
 const [selectingOption, setSelectingOption] = useState<string | null>(null);
 
 const handleOptionSelect = (field: keyof QuizFormData, value: string) => {
   setSelectingOption(value);
-  setFormData(prev => ({ ...prev, [field]: value }));
+  setFormData((prev) => ({ ...prev, [field]: value }));
   setTimeout(() => {
     goToNextStep();
     setSelectingOption(null);
@@ -250,30 +273,33 @@ const handleOptionSelect = (field: keyof QuizFormData, value: string) => {
 ```
 
 ### Visual Feedback (DatesStep.tsx, etc.)
+
 ```tsx
 const isSelecting = selectingValue === option;
 
 <button
   disabled={!!selectingValue} // Блокируем другие кнопки
   className={`
-    ${isSelecting
-      ? 'bg-neutral-900 text-white scale-[0.98] shadow-lg'
-      : isSelected
-      ? 'border-neutral-900 bg-neutral-50 ring-1'
-      : 'border-neutral-200 hover:border-neutral-300'
+    ${
+      isSelecting
+        ? "bg-neutral-900 text-white scale-[0.98] shadow-lg"
+        : isSelected
+          ? "border-neutral-900 bg-neutral-50 ring-1"
+          : "border-neutral-200 hover:border-neutral-300"
     }
   `}
 >
-  <span className={isSelecting ? 'text-white' : 'text-neutral-900'}>
+  <span className={isSelecting ? "text-white" : "text-neutral-900"}>
     {option}
   </span>
   {(isSelected || isSelecting) && (
-    <CheckIcon className={isSelecting ? 'scale-110' : ''} />
+    <CheckIcon className={isSelecting ? "scale-110" : ""} />
   )}
-</button>
+</button>;
 ```
 
 ### Card Shadow (QuizLayout.tsx)
+
 ```tsx
 style={{
   boxShadow: '0 20px 60px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.04)',
@@ -283,15 +309,18 @@ className="border border-neutral-200/50 backdrop-blur-sm"
 ```
 
 ### Page Background (quiz/page.tsx)
+
 ```tsx
 <div className="bg-linear-to-b from-neutral-100 via-neutral-50 to-neutral-100">
   {/* Vignette overlay */}
-  <div className="absolute inset-0 bg-[radial-gradient(
+  <div
+    className="absolute inset-0 bg-[radial-gradient(
     circle_at_center,
     transparent 0%,
     rgba(0,0,0,0.02) 100%
-  )]" />
-  
+  )]"
+  />
+
   {/* Trust marker */}
   <div className="text-xs text-neutral-400">
     Персональный подбор • Без обязательств
@@ -304,26 +333,31 @@ className="border border-neutral-200/50 backdrop-blur-sm"
 ## 💎 Luxury Design Principles
 
 ### 1. **Micro-satisfaction**
+
 - Действие → визуальное подтверждение → переход
 - Не сразу, не резко
 - Мозг успевает зафиксировать
 
 ### 2. **Soft contrast**
+
 - Не белое на белом
 - Не чёрное на белом
 - Мягкие градиенты + vignette
 
 ### 3. **Stage presence**
+
 - Карточка = главный герой
 - Фон = сцена
 - Всё остальное = декорации
 
 ### 4. **Subtle reassurance**
+
 - Маркеры уверенности
 - Маленькие, едва заметные
 - Снижают тревогу без навязчивости
 
 ### 5. **Vertical rhythm**
+
 - Не слишком высоко (агрессивно)
 - Не слишком низко (теряется)
 - Визуальный центр экрана
@@ -332,36 +366,40 @@ className="border border-neutral-200/50 backdrop-blur-sm"
 
 ## 🎯 Expected Impact
 
-| Metric | Expected Change | Why |
-|--------|----------------|-----|
-| **Perceived Quality** | ↑ 20-30% | Visual feedback = polished |
-| **Trust Score** | ↑ 15-20% | Trust markers reduce anxiety |
-| **Completion Rate** | ↑ 8-12% | Micro-satisfaction keeps engagement |
-| **Time on Page** | ↑ 10-15% | Users feel more confident |
+| Metric                | Expected Change | Why                                 |
+| --------------------- | --------------- | ----------------------------------- |
+| **Perceived Quality** | ↑ 20-30%        | Visual feedback = polished          |
+| **Trust Score**       | ↑ 15-20%        | Trust markers reduce anxiety        |
+| **Completion Rate**   | ↑ 8-12%         | Micro-satisfaction keeps engagement |
+| **Time on Page**      | ↑ 10-15%        | Users feel more confident           |
 
 ---
 
 ## 🚀 Next Level (optional, future)
 
 ### 1. **Haptic Feedback** (mobile)
+
 ```typescript
 navigator.vibrate(50); // При выборе
 ```
 
 ### 2. **Sound Design** (very subtle)
+
 ```typescript
-new Audio('/sounds/soft-click.mp3').play(); // При выборе
+new Audio("/sounds/soft-click.mp3").play(); // При выборе
 ```
 
 ### 3. **Personalized Animation Speed**
+
 ```typescript
 // Если пользователь быстро кликает → ускоряем анимации
 // Если медленно → оставляем 200ms
 ```
 
 ### 4. **Progress Persistence**
+
 ```typescript
-localStorage.setItem('quiz-progress', JSON.stringify(formData));
+localStorage.setItem("quiz-progress", JSON.stringify(formData));
 // "Вернуться к незаконченной заявке"
 ```
 

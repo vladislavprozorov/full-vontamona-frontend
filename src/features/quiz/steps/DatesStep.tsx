@@ -1,8 +1,8 @@
-import { OPTIONS } from '../quiz.constants';
+import { DATE_RANGE_OPTIONS, type DateRange } from '../model';
 
 interface DatesStepProps {
-  onSelect: (value: string) => void;
-  selectedValue?: string;
+  onSelect: (value: DateRange) => void;
+  selectedValue?: DateRange;
   selectingValue?: string | null;
 }
 
@@ -13,14 +13,14 @@ export function DatesStep({ onSelect, selectedValue, selectingValue }: DatesStep
         Когда вам было бы удобно отправиться?
       </h3>
       <div className="grid gap-2.5 md:gap-2">
-        {OPTIONS.dates.map((option) => {
-          const isSelected = selectedValue === option;
-          const isSelecting = selectingValue === option;
+        {DATE_RANGE_OPTIONS.map((option) => {
+          const isSelected = selectedValue === option.value;
+          const isSelecting = selectingValue === option.label;
           return (
             <button
-              key={option}
+              key={option.value}
               type="button"
-              onClick={() => onSelect(option)}
+              onClick={() => onSelect(option.value)}
               disabled={!!selectingValue}
               className={`p-3.5 md:p-3 text-left border rounded-xl transition-all duration-200 ${
                 isSelecting
@@ -35,7 +35,7 @@ export function DatesStep({ onSelect, selectedValue, selectingValue }: DatesStep
                   isSelecting 
                     ? 'text-white dark:text-neutral-900' 
                     : 'text-neutral-900 dark:text-neutral-100'
-                }`}>{option}</span>
+                }`}>{option.label}</span>
                 {(isSelected || isSelecting) && (
                   <svg className={`w-6 h-6 transition-all duration-200 ${
                     isSelecting 
