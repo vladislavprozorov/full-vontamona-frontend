@@ -159,7 +159,11 @@ async function sendToEmail(
   scoring: ReturnType<typeof calculateScore>,
   applicationId: string
 ) {
+  const { Resend } = await import('resend');
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  
   const EMAIL_TO = process.env.EMAIL_TO || 'info@vontamona.com';
+  const EMAIL_FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
   const insights = getInsights(data);
 
   // 1️⃣ Email менеджеру
@@ -188,72 +192,90 @@ async function sendToEmail(
     <h3>🎯 Оценка лида</h3>
     <p><strong>Приоритет:</strong> ${scoring.emoji} ${scoring.priority}</p>
     <p><strong>Скоринг:</strong> ${scoring.score}/9 баллов</p>
+    <p><strong>SLA:</strong> ${scoring.sla}</p>
     
     ${insights.length > 0 ? `<h3>💡 Инсайты</h3><ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul>` : ''}
   `;
 
-  // 2️⃣ Автоответ клиенту (если указан email)
+  // 2️⃣ Автоответ клиенту
   const clientEmailBody = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #1e3a8a;">Спасибо за заявку, ${data.name}!</h2>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+      <h2 style="color: #171717; font-size: 24px; font-weight: 500; margin-bottom: 16px;">
+        Здравствуйте, ${data.name}!
+      </h2>
       
-      <p>Мы получили ваш запрос на подбор круиза.</p>
+      <p style="margin-bottom: 16px; line-height: 1.6;">
+        Благодарим вас за обращение — мы получили вашу заявку на подбор круиза.
+      </p>
       
-      <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <p style="margin: 0;"><strong>🆔 Номер вашей заявки:</strong> ${applicationId}</p>
+      <div style="background: #f5f5f5; padding: 20px; border-radius: 12px; margin: 24px 0;">
+        <p style="margin: 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+          Номер вашей заявки
+        </p>
+        <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 16px; font-weight: 600; color: #171717;">
+          ${applicationId}
+        </p>
       </div>
       
-      <p><strong>Что дальше?</strong></p>
-      <ul>
-        <li>Наш эксперт по круизам изучит ваши предпочтения</li>
-        <li>Подберём лучшие варианты под ваш бюджет и даты</li>
-        <li>Свяжемся с вами <strong>в течение 2-3 часов</strong></li>
+      <p style="margin-bottom: 16px; line-height: 1.6;">
+        Наш эксперт уже приступил к подбору маршрутов и лайнеров с учётом ваших пожеланий.<br>
+        Мы подбираем круизы вручную, не по шаблону, поэтому уделяем внимание деталям.
+      </p>
+      
+      <p style="font-weight: 500; margin-top: 24px; margin-bottom: 12px;">Что будет дальше:</p>
+      <ul style="line-height: 1.8; padding-left: 20px; color: #404040;">
+        <li>в течение 2–3 часов с вами свяжется персональный консультант</li>
+        <li>мы предложим оптимальные варианты по датам, маршрутам и уровню сервиса</li>
+        <li>при необходимости уточним детали, чтобы сделать подбор максимально точным</li>
       </ul>
       
-      <p>Если у вас срочный вопрос, звоните: <strong>+7 (XXX) XXX-XX-XX</strong></p>
+      <p style="margin-top: 24px; line-height: 1.6; color: #525252;">
+        Если у вас появятся вопросы или вы захотите дополнить заявку, просто ответьте на это письмо, 
+        указав номер заявки — мы будем рады помочь.
+      </p>
       
-      <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+      <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e5e5;">
       
-      <p style="color: #6b7280; font-size: 14px;">
+      <p style="color: #737373; font-size: 14px; line-height: 1.6; margin: 0;">
         С уважением,<br>
-        Команда VonTamona
+        <strong style="color: #171717;">Команда VonTamona</strong><br>
+        Персональный подбор круизов
       </p>
     </div>
   `;
 
-  console.log('📧 Email would be sent to manager:', EMAIL_TO);
-  console.log('Manager email body preview:', managerEmailBody.substring(0, 200) + '...');
-  
-  if (data.email) {
-    console.log('📧 Auto-reply would be sent to client:', data.email);
+  try {
+    // Отправка менеджеру
+    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 're_YOUR_API_KEY_HERE') {
+      await resend.emails.send({
+        from: EMAIL_FROM,
+        to: EMAIL_TO,
+        subject: `${scoring.emoji} ${scoring.priority} лид: ${data.name} (${applicationId})`,
+        html: managerEmailBody,
+      });
+      
+      // Автоответ клиенту
+      if (data.email) {
+        await resend.emails.send({
+          from: EMAIL_FROM,
+          to: data.email,
+          subject: `Ваша заявка №${applicationId} принята — подбираем круизы!`,
+          html: clientEmailBody,
+        });
+        console.log('✅ Client auto-reply sent to:', data.email);
+      }
+      
+      console.log('✅ Manager email sent successfully');
+    } else {
+      console.log('⚠️ Resend API key not configured');
+      console.log('📧 Manager email preview:', EMAIL_TO);
+      if (data.email) {
+        console.log('📧 Client email would be sent to:', data.email);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Failed to send email:', error);
   }
-
-  // TODO: Раскомментируйте когда настроите email провайдера (Resend, SendGrid, etc)
-  /*
-  // Отправка менеджеру
-  await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      to: EMAIL_TO,
-      subject: `${scoring.emoji} ${scoring.priority} лид: ${data.name} (${applicationId})`,
-      html: managerEmailBody,
-    }),
-  });
-  
-  // Автоответ клиенту (если указан email)
-  if (data.email) {
-    await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: data.email,
-        subject: `Ваша заявка №${applicationId} принята — подбираем круизы!`,
-        html: clientEmailBody,
-      }),
-    });
-  }
-  */
 }
 
 export async function POST(request: NextRequest) {

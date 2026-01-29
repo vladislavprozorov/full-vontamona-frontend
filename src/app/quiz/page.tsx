@@ -8,16 +8,22 @@ export const metadata: Metadata = {
 
 export default function QuizPage() {
   return (
-    <div className="min-h-screen bg-linear-to-b from-neutral-50 to-white dark:from-neutral-950 dark:to-neutral-900 pt-20 md:pt-24 pb-20">
+    <div className="min-h-screen bg-white dark:bg-neutral-950 pt-12 md:pt-16 pb-20">
       <div className="container mx-auto px-4">
         {/* Заголовок */}
-        <div className="text-center mb-10 md:mb-12 max-w-2xl mx-auto">
+        <div className="text-center mb-8 md:mb-10 max-w-2xl mx-auto">
           <h1 className="text-2xl md:text-3xl font-medium text-neutral-900 dark:text-neutral-100 mb-2 leading-tight">
             Подберём идеальный круиз
           </h1>
-          <p className="text-[15px] text-neutral-500 dark:text-neutral-400">
+          <p className="text-[15px] text-neutral-500 dark:text-neutral-400 mb-3">
             Ответьте на 5 вопросов — и наш эксперт подберёт варианты специально для вас
           </p>
+          {/* Маркер уверенности */}
+          <div className="flex items-center justify-center gap-2 text-xs text-neutral-400 dark:text-neutral-500">
+            <span>Персональный подбор</span>
+            <span>•</span>
+            <span>Без обязательств</span>
+          </div>
         </div>
 
         {/* Форма квиза */}
