@@ -2,6 +2,8 @@ import type { FooterProps, FooterSection, SocialLink } from './footer.types';
 import { FooterInfo } from './footer-info';
 import { FooterNav } from './footer-nav';
 import { FooterSocial } from './footer-social';
+import { FeedbackForm } from '@/features/feedback/feedback-form';
+import { COMPANY } from '@/config/company';
 
 // Social icons (using simple SVG icons)
 const TelegramIcon = () => (
@@ -51,12 +53,12 @@ const footerSections: FooterSection[] = [
     ],
   },
   {
-    title: 'Поддержка',
+    title: 'Документы',
     links: [
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Консультация', href: '/consultation' },
       { label: 'Политика конфиденциальности', href: '/privacy' },
-      { label: 'Условия использования', href: '/terms' },
+      { label: 'Договор и оплата', href: '/contract' },
+      { label: 'Реквизиты компании', href: '/requisites' },
+      { label: 'Описание услуг', href: '/services' },
     ],
   },
 ];
@@ -89,45 +91,95 @@ export function Footer({ className = '' }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={`bg-footer-bg border-t border-footer-border ${className}`}>
-      <div className="container mx-auto px-4 py-12 lg:py-16">
-        {/* Main footer content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-8">
-          {/* Company info */}
-          <div className="lg:col-span-4">
-            <FooterInfo />
-          </div>
+    <footer className={className}>
+      {/* Форма обратной связи - чёрный фон */}
+      <div className="bg-neutral-900 py-8">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="p-6">
+              {/* Header */}
+              <div className="mb-4">
+                <h2 className="text-[18px] font-semibold text-neutral-900 mb-1">
+                  Поможем решить все вопросы
+                </h2>
+                <p className="text-[13px] text-neutral-500 leading-snug">
+                  Если вы хотите больше узнать о платформе или не знаете, какую программу обучения выбрать, оставьте заявку — и мы перезвоним
+                </p>
+              </div>
 
-          {/* Navigation sections */}
-          <div className="lg:col-span-6">
-            <FooterNav sections={footerSections} />
-          </div>
+              {/* Form */}
+              <FeedbackForm />
 
-          {/* Social media */}
-          <div className="lg:col-span-2">
-            <FooterSocial links={socialLinks} />
+              {/* Trust indicator */}
+              <p className="mt-3 text-center text-[9px] text-neutral-400 leading-tight">
+                Отправляя сообщение, вы соглашаетесь с{' '}
+                <a href="/privacy" className="underline hover:text-neutral-600 transition-colors">
+                  условиями использования
+                </a>
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-footer-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-footer-text-muted text-sm">
-              © {currentYear} VON TAMONA. Все права защищены.
-            </p>
-            <div className="flex gap-6 text-sm">
-              <a 
-                href="/privacy" 
-                className="text-footer-link-default hover:text-footer-link-hover transition-colors"
-              >
-                Политика конфиденциальности
-              </a>
-              <a 
-                href="/terms" 
-                className="text-footer-link-default hover:text-footer-link-hover transition-colors"
-              >
-                Условия использования
-              </a>
+      {/* Основной футер - темно-синий как на скриншоте */}
+      <div className="bg-[#000035] border-t border-white/10">
+        <div className="container mx-auto px-4 py-12 lg:py-16">
+          {/* Main footer content */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-8">
+            {/* Company info */}
+            <div className="lg:col-span-4">
+              <FooterInfo />
+            </div>
+
+            {/* Navigation sections */}
+            <div className="lg:col-span-6">
+              <FooterNav sections={footerSections} />
+            </div>
+
+            {/* Social media */}
+            <div className="lg:col-span-2">
+              <FooterSocial links={socialLinks} />
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="pt-8 border-t border-white/10">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-center md:text-left">
+                <p className="text-white/70 text-sm mb-1">
+                  © {currentYear} {COMPANY.legalName}. Все права защищены.
+                </p>
+                <p className="text-white/50 text-xs">
+                  ИНН {COMPANY.inn}
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-4 text-sm">
+                <a 
+                  href="/privacy" 
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Политика конфиденциальности
+                </a>
+                <a 
+                  href="/contract" 
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Договор и оплата
+                </a>
+                <a 
+                  href="/requisites" 
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Реквизиты
+                </a>
+                <a 
+                  href="/services" 
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Услуги
+                </a>
+              </div>
             </div>
           </div>
         </div>

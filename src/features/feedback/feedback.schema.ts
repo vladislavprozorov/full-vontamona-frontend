@@ -17,6 +17,12 @@ export const feedbackSchema = z.object({
     .string()
     .regex(PHONE_MASK_REGEX, 'Введите корректный телефон'),
 
+  email: z
+    .string()
+    .email('Введите корректный email')
+    .optional()
+    .or(z.literal('')),
+
   message: z
     .string()
     .max(500)

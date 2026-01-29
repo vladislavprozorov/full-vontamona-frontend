@@ -1,8 +1,8 @@
 // src/components/sections/hero.tsx
 'use client';
 
-import { HeroWidget } from '@/features/pac-widget/hero-widget';
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -25,8 +25,8 @@ export function Hero() {
     };
   }, []);
 
-  const scrollToResults = () => {
-    const el = document.getElementById('cruises');
+  const scrollToWidget = () => {
+    const el = document.getElementById('widget');
     el?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -55,20 +55,37 @@ export function Hero() {
 
       {/* 📝 CONTENT (поверх видео) */}
       <div className="relative z-10 flex h-full items-center">
-        <div className="mx-auto w-full max-w-7xl px-4">
+        <div className="mx-auto w-full max-w-4xl px-4 text-center">
           {/* Заголовок */}
-          <div className="text-center mb-8 animate-fade-in">
-            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl drop-shadow-2xl">
+          <div className="mb-12 animate-fade-in">
+            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl drop-shadow-2xl mb-6">
               Круизы по всему миру
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90 sm:text-xl drop-shadow-lg">
-              Подберём идеальный морской круиз под ваши даты, бюджет и желания
+            <p className="mx-auto mt-4 max-w-2xl text-xl text-white/90 sm:text-2xl drop-shadow-lg mb-4">
+              Подберём идеальный круиз под ваши даты, бюджет и желания
+            </p>
+            <p className="text-white/80 text-lg drop-shadow-lg">
+              Ответьте на 5 вопросов — и получите персональную подборку
             </p>
           </div>
 
-          {/* 🎯 ФОРМА ПОИСКА (вместо кнопок) */}
-          <div className="animate-fade-in-delay">
-            <HeroWidget />
+          {/* 🎯 ГЛАВНАЯ КНОПКА */}
+          <div className="animate-fade-in-delay flex flex-col items-center gap-4">
+            <Link
+              href="/quiz"
+              className="inline-flex items-center gap-3 bg-white text-neutral-900 px-10 py-5 rounded-full text-xl font-semibold hover:bg-neutral-100 transition-all hover:scale-105 shadow-2xl"
+            >
+              <span>👉</span>
+              <span>Подобрать круиз с экспертом</span>
+            </Link>
+            
+            {/* Вторичная ссылка */}
+            <button
+              onClick={scrollToWidget}
+              className="text-white/80 hover:text-white text-sm underline underline-offset-4 transition-colors"
+            >
+              Или посмотрите варианты самостоятельно ↓
+            </button>
           </div>
         </div>
       </div>
@@ -76,7 +93,7 @@ export function Hero() {
       {/* ⬇️ SCROLL INDICATOR (стрелка вниз) */}
       <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce">
         <button
-          onClick={scrollToResults}
+          onClick={scrollToWidget}
           className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110"
           aria-label="Прокрутить вниз"
         >

@@ -4,20 +4,20 @@ export function FooterInfo() {
   return (
     <div className="space-y-4">
       <Logo />
-      <p className="text-footer-text-secondary text-sm max-w-xs">
+      <p className="text-white/70 text-sm max-w-xs">
         Эксклюзивные круизы премиум-класса по лучшим направлениям мира. 
         Индивидуальный подход к каждому клиенту.
       </p>
       <div className="space-y-2">
         <a 
           href="tel:+79634551168" 
-          className="block text-footer-text-primary hover:text-footer-link-hover transition-colors text-sm font-medium"
+          className="block text-white hover:text-white/90 transition-colors text-sm font-medium"
         >
           +7 963 455-11-68
         </a>
         <a 
           href="mailto:info@vontamona.com" 
-          className="block text-footer-link-default hover:text-footer-link-hover transition-colors text-sm"
+          className="block text-white/70 hover:text-white transition-colors text-sm"
         >
           info@vontamona.com
         </a>
