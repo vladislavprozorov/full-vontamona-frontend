@@ -10,8 +10,13 @@ export type {
   QuizFormData,
   QuizState,
   QuizEvent,
-  QuizStepConfig,
 } from './quiz.machine';
+
+export type {
+  QuizStepConfig,
+  QuizStepRenderProps,
+  SelectingOption,
+} from './quiz.steps.config';
 
 export type {
   Budget,
@@ -26,12 +31,13 @@ export type { SuccessMessage } from './success.copy';
 export type { ContextualHint } from './quiz.suggestions';
 export type { SavedDraft } from './quiz.persistence';
 export type { SubmitResult } from './quiz.submit';
+export type { ContactsFormData } from './quiz.validation';
 
 // Constants
 export {
   QUIZ_STEPS,
   TOTAL_STEPS,
-} from './quiz.machine';
+} from './quiz.steps.config';
 
 export {
   BUDGET_OPTIONS,
@@ -67,3 +73,6 @@ export {
 // Business Logic
 export { getContextualHint, suggestPriorities } from './quiz.suggestions';
 export { getPersonalizedSuccessMessage } from './success.copy';
+
+// Validation
+export { contactsSchema } from './quiz.validation';

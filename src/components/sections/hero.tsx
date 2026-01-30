@@ -20,6 +20,9 @@ export function Hero() {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // 🌊 ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит")
+    // 1.0 → 1.04 за 30 секунд, почти незаметно, но мозг чувствует движение
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
@@ -32,7 +35,7 @@ export function Hero() {
 
   return (
     <section className="relative h-screen min-h-150 overflow-hidden">
-      {/* 🎥 VIDEO BACKGROUND */}
+      {/* 🎥 VIDEO BACKGROUND (с медленным zoom эффектом) */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
@@ -43,48 +46,87 @@ export function Hero() {
           poster="/video/hero-poster.jpg"
           className="h-full w-full object-cover"
           preload="metadata"
+          style={{
+            animation: 'slowZoom 30s ease-in-out infinite alternate'
+          }}
         >
           <source src="/video/hero-trim.mp4" type="video/mp4" />
           {/* Fallback для старых браузеров */}
           Ваш браузер не поддерживает видео.
         </video>
         
-        {/* 🌫️ OVERLAY (затемнение для читаемости текста) */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60" />
+        {/* 🌫️ OVERLAY (сильнее затемнение для премиум-вида) */}
+        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/45 to-black/70" />
+        
+        {/* 🎯 RADIAL GRADIENT (сильнее под текст) */}
+        <div 
+          className="absolute inset-0 z-1"
+          style={{
+            background: 'radial-gradient(ellipse 700px 500px at 50% 42%, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.52) 25%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.18) 65%, rgba(0,0,0,0.08) 80%, rgba(0,0,0,0) 100%)'
+          }}
+        />
       </div>
 
-      {/* 📝 CONTENT (поверх видео) */}
+      {/* 📝 CONTENT (Netflix/Apple стиль — чистый центр) */}
       <div className="relative z-10 flex h-full items-center">
-        <div className="mx-auto w-full max-w-4xl px-4 text-center">
-          {/* Заголовок */}
+        <div className="mx-auto w-full max-w-4xl px-6 text-center">
+          {/* 💎 ДИЗАЙНЕРСКИЙ АКЦЕНТ (премиум-линия) */}
+          <div className="mb-8 animate-fade-in flex items-center justify-center gap-4">
+            <div className="h-px w-12 bg-linear-to-r from-transparent to-white/40" />
+            <span className="text-xs tracking-[0.3em] text-white/60 font-light uppercase">
+              Vontamona Cruises
+            </span>
+            <div className="h-px w-12 bg-linear-to-l from-transparent to-white/40" />
+          </div>
+          
+          {/* 🏆 ЗАГОЛОВОК (Netflix стиль — мощно, чисто) */}
           <div className="mb-12 animate-fade-in">
-            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl drop-shadow-2xl mb-6">
+            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl mb-6"
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0,0,0,0.8)'
+                }}>
               Круизы по всему миру
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-xl text-white/90 sm:text-2xl drop-shadow-lg mb-4">
+            {/* 🎯 Подзаголовок (Apple стиль — легкий, читаемый) */}
+            <p className="text-xl sm:text-2xl md:text-3xl text-white font-light max-w-3xl mx-auto"
+               style={{ 
+                 textShadow: '0 2px 10px rgba(0,0,0,0.6)'
+               }}>
               Подберём идеальный круиз под ваши даты, бюджет и желания
-            </p>
-            <p className="text-white/80 text-lg drop-shadow-lg">
-              Ответьте на 5 вопросов — и получите персональную подборку
             </p>
           </div>
 
-          {/* 🎯 ГЛАВНАЯ КНОПКА */}
-          <div className="animate-fade-in-delay flex flex-col items-center gap-4">
+          {/* 🎯 CTA ZONE (Luxury Concierge) */}
+          <div className="animate-fade-in-delay flex flex-col items-center gap-6">
+            {/* 💼 ГЛАВНАЯ КНОПКА (Concierge Premium — спокойствие и уверенность) */}
             <Link
               href="/quiz"
-              className="inline-flex items-center gap-3 bg-white text-neutral-900 px-10 py-5 rounded-full text-xl font-semibold hover:bg-neutral-100 transition-all hover:scale-105 shadow-2xl"
+              className="group relative inline-flex items-center justify-center px-16 py-8 text-xl font-semibold overflow-hidden rounded-full transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'rgba(255,255,255,0.95)',
+                color: '#0f172a',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+              }}
             >
-              <span>👉</span>
-              <span>Подобрать круиз с экспертом</span>
+              Подобрать круиз с экспертом
             </Link>
+            
+            {/* Trust signal (тихо, снизу) */}
+            <p className="text-white/70 text-sm font-light">
+              ✓ 15 лет опыта · MSC · Costa · Silversea · Подбор вручную
+            </p>
             
             {/* Вторичная ссылка */}
             <button
               onClick={scrollToWidget}
-              className="text-white/80 hover:text-white text-sm underline underline-offset-4 transition-colors"
+              className="text-white/60 hover:text-white text-sm transition-colors mt-2 flex items-center gap-2 group"
             >
-              Или посмотрите варианты самостоятельно ↓
+              <span className="border-b border-white/30 group-hover:border-white/60 transition-colors">
+                Или посмотрите варианты самостоятельно
+              </span>
+              <svg className="w-4 h-4 transform group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
           </div>
         </div>

@@ -17,11 +17,12 @@ import {
   type QuizState,
   type QuizEvent,
   type Priority,
+  type SelectingOption,
 } from './model';
 
 export function useQuiz() {
   const [state, dispatch] = useReducer(quizReducer, initialState);
-  const [selectingOption, setSelectingOption] = useState<any>(null);
+  const [selectingOption, setSelectingOption] = useState<SelectingOption>(null);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
 
   // Load draft on mount

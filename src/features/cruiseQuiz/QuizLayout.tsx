@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-import { QUIZ_STEPS, TOTAL_STEPS } from './quiz.constants';
-import { QuizStep } from './quiz.types';
+import { QUIZ_STEPS, TOTAL_STEPS, type QuizStep } from './model';
 
 interface QuizLayoutProps {
   currentStep: QuizStep;

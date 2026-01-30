@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { contactsSchema, ContactsFormData } from '../quiz.schema';
+import { contactsSchema, type ContactsFormData } from '../model';
 
 interface ContactsStepProps {
   onSubmit: (data: ContactsFormData) => void;

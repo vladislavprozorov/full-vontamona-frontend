@@ -59,22 +59,3 @@ export type QuizEvent =
   | { type: 'SUBMIT_ERROR'; message: string }
   | { type: 'RESTORE_DRAFT'; state: QuizState }
   | { type: 'START_FRESH' };
-
-// ========== Step Configuration ==========
-export interface QuizStepConfig {
-  next: QuizStep | null;
-  prev: QuizStep | null;
-  number: number;
-}
-
-export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
-  dates: { next: 'budget', prev: null, number: 1 },
-  budget: { next: 'travelers', prev: 'dates', number: 2 },
-  travelers: { next: 'region', prev: 'budget', number: 3 },
-  region: { next: 'priorities', prev: 'travelers', number: 4 },
-  priorities: { next: 'contacts', prev: 'region', number: 5 },
-  contacts: { next: 'success', prev: 'priorities', number: 6 },
-  success: { next: null, prev: null, number: 7 },
-};
-
-export const TOTAL_STEPS = 6;

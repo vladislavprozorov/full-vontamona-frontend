@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { QuizForm } from '@/features/quiz/quiz-form';
+import { QuizForm } from '@/features/cruiseQuiz/quiz-form';
 
 export const metadata: Metadata = {
   title: 'Подбор круиза | Круизы',
-  description: 'Ответьте на 5 вопросов, и мы подберём идеальный круиз специально для вас',
+  description: 'Ответьте на несколько вопросов, и мы подберём идеальный круиз специально для вас',
 };
 
 export default function QuizPage() {

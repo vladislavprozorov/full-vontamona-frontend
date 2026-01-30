@@ -9,7 +9,7 @@
  */
 
 import type { QuizState, QuizEvent } from './quiz.machine';
-import { QUIZ_STEPS } from './quiz.machine';
+import { QUIZ_STEPS } from './quiz.steps.config';
 
 export const initialState: QuizState = {
   currentStep: 'dates',

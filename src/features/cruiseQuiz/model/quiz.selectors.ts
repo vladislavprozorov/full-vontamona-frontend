@@ -6,7 +6,7 @@
  */
 
 import type { QuizState } from './quiz.machine';
-import { QUIZ_STEPS } from './quiz.machine';
+import { QUIZ_STEPS } from './quiz.steps.config';
 
 /**
  * Можно ли перейти вперёд?

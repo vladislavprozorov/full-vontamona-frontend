@@ -3,12 +3,7 @@
 import { useQuiz } from './quiz.hooks';
 import { QuizLayout } from './QuizLayout';
 import { SuccessScreen } from './SuccessScreen';
-import { DatesStep } from './steps/DatesStep';
-import { BudgetStep } from './steps/BudgetStep';
-import { TravelersStep } from './steps/TravelersStep';
-import { RegionStep } from './steps/RegionStep';
-import { PrioritiesStep } from './steps/PrioritiesStep';
-import { ContactsStep } from './steps/ContactsStep';
+import { QUIZ_STEPS } from './model';
 
 export function QuizForm() {
   const {
@@ -42,30 +37,25 @@ export function QuizForm() {
     );
   }
 
-  // ========== STEPS MAP ==========
-  const stepsMap = {
-    dates: <DatesStep onSelect={(value) => handleOptionSelect('SELECT_DATE_RANGE', value)} selectedValue={formData.dateRange} selectingValue={selectingOption} />,
-    budget: <BudgetStep onSelect={(value) => handleOptionSelect('SELECT_BUDGET', value)} selectedValue={formData.budget} selectingValue={selectingOption} />,
-    travelers: <TravelersStep onSelect={(value) => handleOptionSelect('SELECT_TRAVELERS', value)} selectedValue={formData.travelers} selectingValue={selectingOption} />,
-    region: <RegionStep onSelect={(value) => handleOptionSelect('SELECT_REGION', value)} selectedValue={formData.region} selectingValue={selectingOption} budget={formData.budget} />,
-    priorities: (
-      <PrioritiesStep 
-        selectedPriorities={formData.priorities}
-        onToggle={togglePriority}
-        onNext={goToNextStep}
-        suggestedPriorities={[]} // TODO: implement smart suggestions
-      />
-    ),
-    contacts: (
-      <ContactsStep 
-        onSubmit={submitContacts}
-        isSubmitting={isSubmitting}
-        error={submitError || ''}
-        onRetry={retrySubmit}
-        onBack={goToPrevStep}
-      />
-    ),
-  };
+  // ========== RENDER STEP FROM CONFIG ==========
+  const stepConfig = QUIZ_STEPS[currentStep];
+  const stepContent = stepConfig.render({
+    state: { 
+      currentStep, 
+      formData, 
+      isSubmitting, 
+      submitError, 
+      applicationId,
+      isReturning,
+    },
+    onOptionSelect: handleOptionSelect,
+    onTogglePriority: togglePriority,
+    onNext: goToNextStep,
+    onSubmit: submitContacts,
+    onRetry: retrySubmit,
+    onBack: goToPrevStep,
+    selectingOption,
+  });
 
   // ========== RENDER ==========
   return (
@@ -104,7 +94,7 @@ export function QuizForm() {
         onNext={currentStep === 'priorities' ? goToNextStep : undefined}
         isReturning={isReturning}
       >
-        {stepsMap[currentStep as keyof typeof stepsMap]}
+        {stepContent}
       </QuizLayout>
     </>
   );

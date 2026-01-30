@@ -161,6 +161,64 @@
   }
 }
 
+/* 🌊 ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит") */
+@keyframes slowZoom {
+  0% {
+    transform: scale(1.0);
+  }
+  100% {
+    transform: scale(1.04);
+  }
+}
+
+/* 🌊 PREMIUM CTA: light ocean эффект (светлая океаническая волна) */
+@keyframes lightOcean {
+  0% {
+    background-position: 0% 50%;
+  }
+  33% {
+    background-position: 100% 70%;
+  }
+  66% {
+    background-position: 50% 30%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ✨ Text gradient shift (текст переливается) */
+@keyframes textShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ✨ Shimmer sweep (роскошное мерцание) */
+@keyframes shimmerSweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 💎 Light particles (световые частицы) */
+@keyframes particles {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 1s ease-out;
 }
