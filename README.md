@@ -4,19 +4,19 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 
 Premium cruise booking platform with intelligent quiz system, real-time search, and luxury UX. Built with Next.js 15, TypeScript, and modern architectural patterns.
 
-## 🏗️ Architecture
+## Architecture
 
 **FSM-Based Quiz** — State machine with centralized step configuration  
 **Feature-Sliced** — Domain-driven structure (`/features/cruiseQuiz`, `/features/search`)  
 **Type-Safe** — Zod schemas, strict TypeScript, no `any` types  
 **Component Library** — shadcn/ui with Tailwind CSS  
-**Smart Suggestions** — AI-powered priority recommendations  
+**Smart Suggestions** — AI-powered priority recommendations
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript 5
@@ -26,7 +26,7 @@ Premium cruise booking platform with intelligent quiz system, real-time search, 
 - **Testing:** Vitest (25/25 tests passing)
 - **Email:** Resend API
 
-## 📦 Quick Start
+## Quick Start
 
 ```bash
 # Install dependencies
@@ -44,7 +44,7 @@ npm run build
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## 🎯 Key Features
+## Key Features
 
 - **Intelligent Quiz:** 8-step FSM with smart suggestions
 - **Real-time Search:** Debounced API calls, optimistic UI
@@ -58,15 +58,15 @@ Open [http://localhost:3000](http://localhost:3000)
 
 Премиум-платформа бронирования круизов с интеллектуальным квизом, поиском в реальном времени и люксовым UX. Построена на Next.js 15, TypeScript и современных архитектурных паттернах.
 
-## 🏗️ Архитектура
+## Архитектура
 
 **FSM-квиз** — Конечный автомат с централизованной конфигурацией шагов  
 **Feature-Sliced** — Доменная структура (`/features/cruiseQuiz`, `/features/search`)  
 **Типобезопасность** — Zod-схемы, строгий TypeScript, никаких `any`  
 **Библиотека компонентов** — shadcn/ui + Tailwind CSS  
-**Умные рекомендации** — AI-подсказки приоритетов  
+**Умные рекомендации** — AI-подсказки приоритетов
 
-## 🛠️ Технологии
+## Технологии
 
 - **Фреймворк:** Next.js 15 (App Router)
 - **Язык:** TypeScript 5
@@ -76,7 +76,7 @@ Open [http://localhost:3000](http://localhost:3000)
 - **Тесты:** Vitest (25/25 проходят)
 - **Email:** Resend API
 
-## 📦 Быстрый старт
+## Быстрый старт
 
 ```bash
 # Установка зависимостей
@@ -94,7 +94,7 @@ npm run build
 
 Открой [http://localhost:3000](http://localhost:3000)
 
-## 🎯 Ключевые фичи
+## Ключевые фичи
 
 - **Интеллектуальный квиз:** 8-шаговый FSM с умными подсказками
 - **Поиск в реальном времени:** Дебаунсинг, оптимистичный UI
