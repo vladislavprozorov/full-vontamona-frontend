@@ -8,12 +8,11 @@
  * - Бизнес-логика = чистая функция
  */
 
-import type { Budget, Travelers, Region, DateRange, Priority } from './quiz.domain';
+import type { Travelers, Region, DateRange, Priority } from './quiz.domain';
 
 // ========== Steps ==========
 export type QuizStep =
   | 'dates'
-  | 'budget'
   | 'travelers'
   | 'region'
   | 'priorities'
@@ -23,7 +22,6 @@ export type QuizStep =
 // ========== Form Data (Domain Types) ==========
 export interface QuizFormData {
   dateRange?: DateRange;
-  budget?: Budget;
   travelers?: Travelers;
   region?: Region;
   priorities: Priority[];
@@ -47,7 +45,6 @@ export interface QuizState {
 // ========== Events ==========
 export type QuizEvent =
   | { type: 'SELECT_DATE_RANGE'; value: DateRange }
-  | { type: 'SELECT_BUDGET'; value: Budget }
   | { type: 'SELECT_TRAVELERS'; value: Travelers }
   | { type: 'SELECT_REGION'; value: Region }
   | { type: 'TOGGLE_PRIORITY'; value: Priority }

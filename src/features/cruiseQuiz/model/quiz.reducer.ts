@@ -42,12 +42,6 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
         formData: { ...state.formData, dateRange: event.value },
       });
 
-    case 'SELECT_BUDGET':
-      return goNext({
-        ...state,
-        formData: { ...state.formData, budget: event.value },
-      });
-
     case 'SELECT_TRAVELERS':
       return goNext({
         ...state,

@@ -9,10 +9,9 @@
 
 import { JSX } from 'react';
 import type { QuizState, QuizStep, QuizEvent } from './quiz.machine';
-import type { Priority, DateRange, Budget, Travelers, Region } from './quiz.domain';
+import type { Priority, DateRange, Travelers, Region } from './quiz.domain';
 import { suggestPriorities } from './quiz.suggestions';
 import { DatesStep } from '../steps/DatesStep';
-import { BudgetStep } from '../steps/BudgetStep';
 import { TravelersStep } from '../steps/TravelersStep';
 import { RegionStep } from '../steps/RegionStep';
 import { PrioritiesStep } from '../steps/PrioritiesStep';
@@ -28,7 +27,7 @@ export interface QuizStepConfig {
 }
 
 // ========== Selecting Option Type (type-safe union) ==========
-export type SelectingOption = DateRange | Budget | Travelers | Region | Priority | null;
+export type SelectingOption = DateRange | Travelers | Region | Priority | null;
 
 // ========== Render Props (все что нужно степу от UI) ==========
 export interface QuizStepRenderProps {
@@ -45,7 +44,7 @@ export interface QuizStepRenderProps {
 // ========== Steps Configuration ==========
 export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   dates: {
-    next: 'budget',
+    next: 'travelers',
     prev: null,
     number: 1,
     title: 'Даты',
@@ -58,24 +57,10 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
     ),
   },
   
-  budget: {
-    next: 'travelers',
-    prev: 'dates',
-    number: 2,
-    title: 'Бюджет',
-    render: ({ state, onOptionSelect, selectingOption }) => (
-      <BudgetStep
-        onSelect={(value) => onOptionSelect('SELECT_BUDGET', value)}
-        selectedValue={state.formData.budget}
-        selectingValue={selectingOption as Budget | null | undefined}
-      />
-    ),
-  },
-  
   travelers: {
     next: 'region',
-    prev: 'budget',
-    number: 3,
+    prev: 'dates',
+    number: 2,
     title: 'Путешественники',
     render: ({ state, onOptionSelect, selectingOption }) => (
       <TravelersStep
@@ -89,14 +74,13 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   region: {
     next: 'priorities',
     prev: 'travelers',
-    number: 4,
+    number: 3,
     title: 'Регион',
     render: ({ state, onOptionSelect, selectingOption }) => (
       <RegionStep
         onSelect={(value) => onOptionSelect('SELECT_REGION', value)}
         selectedValue={state.formData.region}
         selectingValue={selectingOption as Region | null | undefined}
-        budget={state.formData.budget}
       />
     ),
   },
@@ -104,7 +88,7 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   priorities: {
     next: 'contacts',
     prev: 'region',
-    number: 5,
+    number: 4,
     title: 'Приоритеты',
     render: ({ state, onTogglePriority, onNext }) => (
       <PrioritiesStep
@@ -119,7 +103,7 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   contacts: {
     next: 'success',
     prev: 'priorities',
-    number: 6,
+    number: 5,
     title: 'Контакты',
     render: ({ state, onSubmit, onRetry, onBack }) => (
       <ContactsStep
@@ -135,10 +119,10 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   success: {
     next: null,
     prev: null,
-    number: 7,
+    number: 6,
     title: 'Готово',
     render: () => <></>, // Success screen handled separately in quiz-form
   },
 };
 
-export const TOTAL_STEPS = 6; // без success
+export const TOTAL_STEPS = 5; // без success

@@ -2,7 +2,7 @@ import type { FooterProps, FooterSection, SocialLink } from './footer.types';
 import { FooterInfo } from './footer-info';
 import { FooterNav } from './footer-nav';
 import { FooterSocial } from './footer-social';
-import { FeedbackForm } from '@/features/feedback/feedback-form';
+import { FooterContactForm } from './footer-contact-form';
 import { COMPANY } from '@/config/company';
 
 // Social icons (using simple SVG icons)
@@ -71,11 +71,6 @@ const socialLinks: SocialLink[] = [
     icon: <TelegramIcon />,
   },
   {
-    name: 'WhatsApp',
-    href: 'https://wa.me/79634551168',
-    icon: <WhatsAppIcon />,
-  },
-  {
     name: 'Instagram',
     href: 'https://instagram.com/vontamona',
     icon: <InstagramIcon />,
@@ -108,7 +103,7 @@ export function Footer({ className = '' }: FooterProps) {
               </div>
 
               {/* Form */}
-              <FeedbackForm />
+              <FooterContactForm />
 
               {/* Trust indicator */}
               <p className="mt-3 text-center text-[9px] text-neutral-400 leading-tight">

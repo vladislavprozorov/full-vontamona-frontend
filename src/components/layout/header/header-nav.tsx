@@ -4,11 +4,6 @@ import { NavItem, HeaderChildProps } from "./header.types";
 const NAV_ITEMS: NavItem[] = [
   { label: 'Круизы', href: '#cruises', type: 'anchor' },
   { label: 'О компании', href: '/about', type: 'route' },
-  {
-    label: 'WhatsApp',
-    href: 'https://wa.me/79634551168',
-    type: 'external',
-  },
 ];
 
 export function HeaderNav({ variant, state }: HeaderChildProps) {

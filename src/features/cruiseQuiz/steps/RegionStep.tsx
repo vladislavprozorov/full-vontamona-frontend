@@ -1,17 +1,13 @@
 import { memo } from 'react';
-import { REGION_OPTIONS, type Region, type Budget } from '../model';
+import { REGION_OPTIONS, type Region } from '../model';
 
 interface RegionStepProps {
   onSelect: (value: Region) => void;
   selectedValue?: Region;
   selectingValue?: Region | null;
-  budget?: Budget;
 }
 
-export const RegionStep = memo(function RegionStep({ onSelect, selectedValue, selectingValue, budget }: RegionStepProps) {
-  // Контекстная подсказка (только для premium бюджета, 1 раз)
-  const showHint = budget === 'PREMIUM' || budget === 'HIGH';
-  
+export const RegionStep = memo(function RegionStep({ onSelect, selectedValue, selectingValue }: RegionStepProps) {
   return (
     <div className="space-y-4 md:space-y-5">
       <div>
@@ -21,15 +17,6 @@ export const RegionStep = memo(function RegionStep({ onSelect, selectedValue, se
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Выберите регион или доверьте выбор нашему эксперту
         </p>
-        
-        {/* Тонкая контекстная подсказка (без эмодзи, как от эксперта) */}
-        {showHint && (
-          <div className="mt-3 p-3 bg-neutral-50 dark:bg-neutral-800/30 border border-neutral-200 dark:border-neutral-700 rounded-lg">
-            <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              При таком бюджете рекомендуем Средиземноморье или Карибы — лучшие лайнеры и сервис премиум-класса
-            </p>
-          </div>
-        )}
       </div>
       <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
         {REGION_OPTIONS.map((option) => {
