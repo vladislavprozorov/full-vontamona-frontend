@@ -1,7 +1,6 @@
 import type { QuizFormData } from './quiz.machine';
 import {
   getLabelForDateRange,
-  getLabelForBudget,
   getLabelForTravelers,
   getLabelForRegion,
   getLabelForPriority,
@@ -29,7 +28,6 @@ export async function submitQuiz(formData: QuizFormData): Promise<SubmitResult> 
     // Конвертируем domain types → labels для API
     const payload = {
       dates: formData.dateRange ? getLabelForDateRange(formData.dateRange) : undefined,
-      budget: formData.budget ? getLabelForBudget(formData.budget) : undefined,
       travelers: formData.travelers ? getLabelForTravelers(formData.travelers) : undefined,
       region: formData.region ? getLabelForRegion(formData.region) : undefined,
       priorities: formData.priorities.map(getLabelForPriority),

@@ -19,7 +19,6 @@ export type {
 } from './quiz.steps.config';
 
 export type {
-  Budget,
   Travelers,
   Region,
   DateRange,
@@ -28,7 +27,6 @@ export type {
 } from './quiz.domain';
 
 export type { SuccessMessage } from './success.copy';
-export type { ContextualHint } from './quiz.suggestions';
 export type { SavedDraft } from './quiz.persistence';
 export type { SubmitResult } from './quiz.submit';
 export type { ContactsFormData } from './quiz.validation';
@@ -40,12 +38,10 @@ export {
 } from './quiz.steps.config';
 
 export {
-  BUDGET_OPTIONS,
   TRAVELERS_OPTIONS,
   REGION_OPTIONS,
   DATE_RANGE_OPTIONS,
   PRIORITY_OPTIONS,
-  getLabelForBudget,
   getLabelForTravelers,
   getLabelForRegion,
   getLabelForDateRange,
@@ -71,7 +67,7 @@ export {
 } from './quiz.selectors';
 
 // Business Logic
-export { getContextualHint, suggestPriorities } from './quiz.suggestions';
+export { suggestPriorities } from './quiz.suggestions';
 export { getPersonalizedSuccessMessage } from './success.copy';
 
 // Validation

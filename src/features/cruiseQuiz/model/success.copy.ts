@@ -17,15 +17,6 @@ export interface SuccessMessage {
  * Получить персонализированное сообщение на основе выборов
  */
 export function getPersonalizedSuccessMessage(formData: QuizFormData): SuccessMessage {
-  // Premium бюджет
-  if (formData.budget === 'PREMIUM') {
-    return {
-      title: 'Отличный выбор премиум-класса',
-      subtitle: 'Наш luxury-консультант свяжется с вами в течение 30 минут',
-      timing: '30 минут',
-    };
-  }
-
   // Семья с детьми
   if (formData.travelers === 'FAMILY') {
     return {
