@@ -304,17 +304,25 @@ export async function POST(request: NextRequest) {
       scoring: `${scoring.emoji} ${scoring.priority} (${scoring.score}/9)`,
     });
 
-    // 🚀 Мгновенный ответ пользователю (не ждём отправки)
-    // Отправка идёт в фоне, не блокирует response
-    Promise.all([
-      sendToTelegram(data, scoring, applicationId),
-      sendToEmail(data, scoring, applicationId),
-    ]).catch(error => {
-      console.error('❌ Background notification error:', error);
-      // Не падаем, логируем для мониторинга
-    });
+    // 🚀 КРИТИЧНО: Отправляем уведомления СИНХРОННО (await)
+    // Иначе Vercel может прервать execution до отправки в Telegram
+    try {
+      await sendToTelegram(data, scoring, applicationId);
+      console.log('✅ Telegram notification sent');
+    } catch (error) {
+      console.error('❌ Telegram error:', error);
+      // Продолжаем даже если Telegram упал
+    }
 
-    // Сразу возвращаем успех (не ждём уведомлений)
+    try {
+      await sendToEmail(data, scoring, applicationId);
+      console.log('✅ Email notification sent');
+    } catch (error) {
+      console.error('❌ Email error:', error);
+      // Продолжаем даже если Email упал
+    }
+
+    // Возвращаем успех после отправки уведомлений
     return NextResponse.json({
       success: true,
       applicationId,

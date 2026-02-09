@@ -36,12 +36,13 @@ export function FooterContactForm() {
     setError('');
 
     try {
-      const response = await fetch('/api/submit', {
+      const response = await fetch('/api/quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
           source: 'footer',
+          priorities: [], // footer форма не собирает приоритеты
         }),
       });
 
