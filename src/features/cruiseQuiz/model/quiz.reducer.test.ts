@@ -21,31 +21,14 @@ describe('quizReducer — Initial State', () => {
 });
 
 describe('quizReducer — Basic Transitions', () => {
-  it('moves from dates → budget after selecting date range', () => {
+  it('moves from dates → travelers after selecting date range', () => {
     const next = quizReducer(initialState, {
       type: 'SELECT_DATE_RANGE',
       value: 'SOON',
     });
 
-    expect(next.currentStep).toBe('budget');
-    expect(next.formData.dateRange).toBe('SOON');
-    expect(next.isReturning).toBe(false);
-  });
-
-  it('moves from budget → travelers after selecting budget', () => {
-    const budgetState: QuizState = {
-      ...initialState,
-      currentStep: 'budget',
-      formData: { ...initialState.formData, dateRange: 'SOON' },
-    };
-
-    const next = quizReducer(budgetState, {
-      type: 'SELECT_BUDGET',
-      value: 'PREMIUM',
-    });
-
     expect(next.currentStep).toBe('travelers');
-    expect(next.formData.budget).toBe('PREMIUM');
+    expect(next.formData.dateRange).toBe('SOON');
     expect(next.isReturning).toBe(false);
   });
 
@@ -56,7 +39,6 @@ describe('quizReducer — Basic Transitions', () => {
       formData: {
         ...initialState.formData,
         dateRange: 'SOON',
-        budget: 'PREMIUM',
       },
     };
 
@@ -77,7 +59,6 @@ describe('quizReducer — Basic Transitions', () => {
       formData: {
         ...initialState.formData,
         dateRange: 'SOON',
-        budget: 'PREMIUM',
         travelers: 'COUPLE',
       },
     };
@@ -97,15 +78,10 @@ describe('quizReducer — Happy Path (главный тест продукта)'
   it('completes full happy path from dates → contacts', () => {
     let state = initialState;
 
-    // dates → budget
+    // dates → travelers
     state = quizReducer(state, { type: 'SELECT_DATE_RANGE', value: 'SOON' });
-    expect(state.currentStep).toBe('budget');
-    expect(state.formData.dateRange).toBe('SOON');
-
-    // budget → travelers
-    state = quizReducer(state, { type: 'SELECT_BUDGET', value: 'PREMIUM' });
     expect(state.currentStep).toBe('travelers');
-    expect(state.formData.budget).toBe('PREMIUM');
+    expect(state.formData.dateRange).toBe('SOON');
 
     // travelers → region
     state = quizReducer(state, { type: 'SELECT_TRAVELERS', value: 'COUPLE' });
@@ -131,7 +107,6 @@ describe('quizReducer — Happy Path (главный тест продукта)'
 
     // Все данные должны быть сохранены
     expect(state.formData.dateRange).toBe('SOON');
-    expect(state.formData.budget).toBe('PREMIUM');
     expect(state.formData.travelers).toBe('COUPLE');
     expect(state.formData.region).toBe('MEDITERRANEAN');
     expect(state.formData.priorities).toEqual(['COMFORT', 'RELAX']);
@@ -145,7 +120,6 @@ describe('quizReducer — Priorities Toggle', () => {
     formData: {
       ...initialState.formData,
       dateRange: 'SOON',
-      budget: 'PREMIUM',
       travelers: 'COUPLE',
       region: 'MEDITERRANEAN',
     },
@@ -207,13 +181,13 @@ describe('quizReducer — Navigation (NEXT/PREV)', () => {
   });
 
   it('moves backward with PREV event', () => {
-    const budgetState: QuizState = {
+    const travelersState: QuizState = {
       ...initialState,
-      currentStep: 'budget',
+      currentStep: 'travelers',
       formData: { ...initialState.formData, dateRange: 'SOON' },
     };
 
-    const prev = quizReducer(budgetState, { type: 'PREV' });
+    const prev = quizReducer(travelersState, { type: 'PREV' });
 
     expect(prev.currentStep).toBe('dates');
     expect(prev.isReturning).toBe(true); // 🔥 important!
@@ -244,7 +218,6 @@ describe('quizReducer — Submit Flow', () => {
     currentStep: 'contacts',
     formData: {
       dateRange: 'SOON',
-      budget: 'PREMIUM',
       travelers: 'COUPLE',
       region: 'MEDITERRANEAN',
       priorities: ['COMFORT'],
@@ -302,7 +275,6 @@ describe('quizReducer — Restore & Reset', () => {
       currentStep: 'region',
       formData: {
         dateRange: 'ONE_TO_THREE',
-        budget: 'HIGH',
         travelers: 'FAMILY',
         priorities: [],
       },
@@ -315,7 +287,6 @@ describe('quizReducer — Restore & Reset', () => {
 
     expect(next.currentStep).toBe('region');
     expect(next.formData.dateRange).toBe('ONE_TO_THREE');
-    expect(next.formData.budget).toBe('HIGH');
     expect(next.formData.travelers).toBe('FAMILY');
     expect(next.isReturning).toBe(false);
   });
@@ -326,7 +297,6 @@ describe('quizReducer — Restore & Reset', () => {
       currentStep: 'priorities',
       formData: {
         dateRange: 'SOON',
-        budget: 'PREMIUM',
         travelers: 'COUPLE',
         region: 'MEDITERRANEAN',
         priorities: ['COMFORT'],
@@ -345,7 +315,6 @@ describe('quizReducer — Business Invariants (самый сеньорский �
 
     // Проходим все шаги через NEXT
     state = quizReducer(state, { type: 'SELECT_DATE_RANGE', value: 'SOON' });
-    state = quizReducer(state, { type: 'SELECT_BUDGET', value: 'PREMIUM' });
     state = quizReducer(state, { type: 'SELECT_TRAVELERS', value: 'COUPLE' });
     state = quizReducer(state, { type: 'SELECT_REGION', value: 'MEDITERRANEAN' });
     state = quizReducer(state, { type: 'NEXT' }); // priorities → contacts
@@ -363,7 +332,6 @@ describe('quizReducer — Business Invariants (самый сеньорский �
       currentStep: 'contacts',
       formData: {
         dateRange: 'SOON',
-        budget: 'PREMIUM',
         travelers: 'COUPLE',
         region: 'MEDITERRANEAN',
         priorities: ['COMFORT'],
@@ -390,17 +358,17 @@ describe('quizReducer — Business Invariants (самый сеньорский �
     state = quizReducer(state, { type: 'SELECT_DATE_RANGE', value: 'SOON' });
     const dateRange = state.formData.dateRange;
 
-    state = quizReducer(state, { type: 'SELECT_BUDGET', value: 'PREMIUM' });
+    state = quizReducer(state, { type: 'SELECT_TRAVELERS', value: 'COUPLE' });
     expect(state.formData.dateRange).toBe(dateRange); // preserved
 
-    state = quizReducer(state, { type: 'SELECT_TRAVELERS', value: 'COUPLE' });
+    state = quizReducer(state, { type: 'SELECT_REGION', value: 'MEDITERRANEAN' });
     expect(state.formData.dateRange).toBe(dateRange); // still there
-    expect(state.formData.budget).toBe('PREMIUM'); // still there
+    expect(state.formData.travelers).toBe('COUPLE'); // still there
 
     // Все данные должны сохраняться
     expect(state.formData.dateRange).toBeDefined();
-    expect(state.formData.budget).toBeDefined();
     expect(state.formData.travelers).toBeDefined();
+    expect(state.formData.region).toBeDefined();
   });
 });
 
@@ -410,7 +378,6 @@ describe('quizReducer — Contacts Update', () => {
     currentStep: 'contacts',
     formData: {
       dateRange: 'SOON',
-      budget: 'PREMIUM',
       travelers: 'COUPLE',
       region: 'MEDITERRANEAN',
       priorities: ['COMFORT'],
