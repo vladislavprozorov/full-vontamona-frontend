@@ -45,7 +45,7 @@ export function Hero() {
           playsInline
           poster="/video/hero-poster.jpg"
           className="h-full w-full object-cover"
-          preload="metadata"
+          preload="auto"
           style={{
             animation: 'slowZoom 30s ease-in-out infinite alternate'
           }}
