@@ -4,7 +4,7 @@
 
 [build]
   command = "npm run build"
-  publish = ".next"
+  # publish не нужен — плагин сам определит
 
 # Next.js Runtime для Netlify (обязательно!)
 [[plugins]]

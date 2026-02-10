@@ -1,0 +1,11 @@
+# Next.js static assets (CSS, JS, fonts, images)
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# API routes (не кешируем)
+/api/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# HTML pages (ревалидация каждый раз)
+/*
+  Cache-Control: public, max-age=0, must-revalidate
