@@ -22,10 +22,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* PAC Widget CSS */}
-        <link rel="stylesheet" href="https://widget.gocruise.ru/css/app.css" />
-      </head>
       <body
         className="antialiased font-sans"
       >
