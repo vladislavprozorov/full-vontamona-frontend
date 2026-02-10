@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
 import { Header } from '@/components/layout/header/header';
 import { ConditionalFooter } from '@/components/layout/conditional-footer';
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// ❌ УДАЛЕНЫ Google Fonts (блокируются без VPN)
+// import { Geist, Geist_Mono } from "next/font/google";
+// Используем system fonts вместо них
 
 export const metadata: Metadata = {
   title: "Vontamona — Подбор круизов на любой вкус",
@@ -34,7 +27,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://widget.gocruise.ru/css/app.css" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="antialiased font-sans"
       >
         {/* Header теперь на уровне страниц, не глобально */}
         {children}
