@@ -3,26 +3,9 @@ import { Hero } from '@/components/sections/hero';
 import { BenefitsSection } from '@/components/sections/benefits';
 import { CompanyFactsSection } from '@/components/sections/company-facts';
 import { SectionDivider } from '@/components/ui/section-divider';
+import { LazyPacWidget } from '@/components/lazy-pac-widget';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-// Lazy loading виджета (он не нужен сразу)
-const PacWidget = dynamic(() => import('@/features/pac-widget/pac-widget').then(mod => ({ default: mod.PacWidget })), {
-  ssr: false,
-  loading: () => (
-    <div className="mx-auto max-w-7xl px-4 py-24">
-      <div className="rounded-xl border bg-background p-6 shadow-sm">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Загрузка виджета...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-});
 
 export default function HomePage() {
   return (
@@ -53,7 +36,7 @@ export default function HomePage() {
               Посмотрите доступные круизы и забронируйте онлайн
             </p>
           </div>
-          <PacWidget />
+          <LazyPacWidget />
         </section>
 
       </main>
