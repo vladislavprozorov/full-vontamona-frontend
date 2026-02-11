@@ -16,8 +16,8 @@ export default function HomePage() {
         {/* HERO */}
         <Hero />
 
-        {/* BENEFITS - Почему мы? */}
-        <BenefitsSection />
+        {/* BENEFITS - Почему мы?
+        <BenefitsSection /> */}
 
         {/* DIVIDER */}
         <SectionDivider />
