@@ -82,7 +82,7 @@ export function FeedbackForm() {
 
           <ul className="mt-6 space-y-3 text-sm text-neutral-700">
             <li>— Персональный менеджер 24/7</li>
-            <li>— Прямая работа с MSC, Costa, Royal Caribbean</li>
+            <li>— Официальный партнёр MSC Cruises</li>
             <li>— Документы, визы, страховки</li>
           </ul>
 

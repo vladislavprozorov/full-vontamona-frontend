@@ -1,21 +1,22 @@
-import { Logo } from '../logo';
+import Link from 'next/link';
 
 export function FooterInfo() {
   return (
     <div className="space-y-4">
-      <Logo />
+      {/* Logo для footer - белый текст */}
+      <Link
+        href="/"
+        className="text-xl font-semibold tracking-tight inline-block"
+        aria-label="Vontamona — круизы и путешествия"
+      >
+        <span className="text-white/90">Vonta</span>
+        <span className="text-white">mona</span>
+      </Link>
+      
       <p className="text-white/70 text-sm max-w-xs">
         Эксклюзивные круизы премиум-класса по лучшим направлениям мира. 
         Индивидуальный подход к каждому клиенту.
       </p>
-      {/* <div className="space-y-2">
-        <a 
-          href="mailto:infovontamona@mail.ru" 
-          className="block text-white/70 hover:text-white transition-colors text-sm"
-        >
-          infovontamona@mail.ru
-        </a>
-      </div> */}
     </div>
   );
 }

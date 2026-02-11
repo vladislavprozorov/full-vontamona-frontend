@@ -113,7 +113,7 @@ export function Hero() {
             
             {/* Trust signal (тихо, снизу) */}
             <p className="text-white/70 text-sm font-light">
-              ✓ 15 лет опыта · MSC · Costa · Silversea · Подбор вручную
+              ✓ 15 лет опыта · MSC Explora · Подбор вручную
             </p>
             
             {/* Вторичная ссылка */}

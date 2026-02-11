@@ -56,6 +56,6 @@ export const COMPANY_FACTS: Benefit[] = [
 export const TRUST_MARKERS = [
   { label: '5+ лет', sublabel: 'на рынке' },
   { label: '5000+', sublabel: 'довольных клиентов' },
-  { label: 'Официальный агент', sublabel: 'MSC & Costa Cruises' },
+  { label: 'Официальный агент', sublabel: 'MSC Cruises' },
   { label: '4.9/5', sublabel: 'средний рейтинг' },
 ];

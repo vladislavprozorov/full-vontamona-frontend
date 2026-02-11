@@ -1,7 +1,6 @@
 import { Header } from '@/components/layout/header/header';
 import { Hero } from '@/components/sections/hero';
 import { BenefitsSection } from '@/components/sections/benefits';
-import { CompanyFactsSection } from '@/components/sections/company-facts';
 import { SectionDivider } from '@/components/ui/section-divider';
 import { LazyPacWidget } from '@/components/lazy-pac-widget';
 import { Button } from '@/components/ui/button';
@@ -19,9 +18,6 @@ export default function HomePage() {
 
         {/* BENEFITS - Почему мы? */}
         <BenefitsSection />
-
-        {/* COMPANY FACTS */}
-        <CompanyFactsSection />
 
         {/* DIVIDER */}
         <SectionDivider />

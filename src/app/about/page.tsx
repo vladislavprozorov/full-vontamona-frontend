@@ -61,7 +61,7 @@ export default function AboutPage() {
                     предлагать лучшие цены на рынке.
                   </p>
                   <p>
-                    Сегодня мы — официальный партнёр MSC Cruises, Costa Cruises и других крупнейших 
+                    Сегодня мы — официальный партнёр MSC Cruises и других крупнейших 
                     операторов. За 5+ лет отправили в круизы более 5000 довольных клиентов.
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
                       </li>
                       <li className="flex items-center gap-2">
                         <ShieldCheck className="w-4 h-4 text-primary" />
-                        Официальный партнёр MSC и Costa Cruises
+                        Официальный партнёр MSC Cruises
                       </li>
                     </ul>
                   )}

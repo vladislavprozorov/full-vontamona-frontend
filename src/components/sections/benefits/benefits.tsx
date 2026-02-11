@@ -80,7 +80,7 @@ function MainBenefitCard({ benefit }: { benefit: Benefit }) {
           {/* Живое доверие - тихо, для внимательных */}
           <div className="mt-8 pt-6 border-t border-neutral-900/5">
             <p className="text-[11px] text-neutral-400 leading-relaxed">
-              Работаем напрямую с <span className="text-neutral-600 font-medium">MSC Cruises</span>, <span className="text-neutral-600 font-medium">Costa</span>, <span className="text-neutral-600 font-medium">Royal Caribbean</span>
+              Работаем напрямую с <span className="text-neutral-600 font-medium">MSC Cruises</span> и другими премиальными линиями
             </p>
           </div>
         </CardContent>
