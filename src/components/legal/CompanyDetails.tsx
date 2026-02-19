@@ -1,7 +1,7 @@
-import { COMPANY } from '@/config/company';
+import { COMPANY } from "@/config/company";
 
 interface CompanyDetailsProps {
-  variant?: 'full' | 'compact';
+  variant?: "full" | "compact";
   className?: string;
 }
 
@@ -9,8 +9,8 @@ interface CompanyDetailsProps {
  * Реквизиты компании
  * Используется в footer и на странице реквизитов
  */
-export function CompanyDetails({ variant = 'compact', className = '' }: CompanyDetailsProps) {
-  if (variant === 'compact') {
+export function CompanyDetails({ variant = "compact", className = "" }: CompanyDetailsProps) {
+  if (variant === "compact") {
     return (
       <div className={`text-sm space-y-1 ${className}`}>
         <p className="font-semibold">{COMPANY.shortName}</p>
@@ -31,36 +31,22 @@ export function CompanyDetails({ variant = 'compact', className = '' }: CompanyD
             <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
               Полное наименование:
             </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">
-              {COMPANY.legalName}
-            </dd>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row sm:gap-2">
-            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
-              ИНН:
-            </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">
-              {COMPANY.inn}
-            </dd>
+            <dd className="text-neutral-600 dark:text-neutral-400">{COMPANY.legalName}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-2">
-            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
-              ОГРН:
-            </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">
-              {COMPANY.ogrn}
-            </dd>
+            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">ИНН:</dt>
+            <dd className="text-neutral-600 dark:text-neutral-400">{COMPANY.inn}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-2">
-            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
-              КПП:
-            </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">
-              {COMPANY.kpp}
-            </dd>
+            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">ОГРН:</dt>
+            <dd className="text-neutral-600 dark:text-neutral-400">{COMPANY.ogrn}</dd>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:gap-2">
+            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">КПП:</dt>
+            <dd className="text-neutral-600 dark:text-neutral-400">{COMPANY.kpp}</dd>
           </div>
         </dl>
       </div>
@@ -82,21 +68,13 @@ export function CompanyDetails({ variant = 'compact', className = '' }: CompanyD
         </h3>
         <dl className="space-y-2 text-sm">
           <div className="flex flex-col sm:flex-row sm:gap-2">
-            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
-              Банк:
-            </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">
-              {COMPANY.bank.name}
-            </dd>
+            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">Банк:</dt>
+            <dd className="text-neutral-600 dark:text-neutral-400">{COMPANY.bank.name}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-2">
-            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">
-              БИК:
-            </dt>
-            <dd className="text-neutral-600 dark:text-neutral-400 font-mono">
-              {COMPANY.bank.bik}
-            </dd>
+            <dt className="font-semibold text-neutral-700 dark:text-neutral-300 min-w-35">БИК:</dt>
+            <dd className="text-neutral-600 dark:text-neutral-400 font-mono">{COMPANY.bank.bik}</dd>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:gap-2">
@@ -130,7 +108,10 @@ export function CompanyDetails({ variant = 'compact', className = '' }: CompanyD
               Телефон:
             </dt>
             <dd className="text-neutral-600 dark:text-neutral-400">
-              <a href={`tel:${COMPANY.contacts.phoneRaw}`} className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              <a
+                href={`tel:${COMPANY.contacts.phoneRaw}`}
+                className="hover:text-neutral-900 dark:hover:text-neutral-100"
+              >
                 {COMPANY.contacts.phone}
               </a>
             </dd>
@@ -141,7 +122,10 @@ export function CompanyDetails({ variant = 'compact', className = '' }: CompanyD
               Email:
             </dt>
             <dd className="text-neutral-600 dark:text-neutral-400">
-              <a href={`mailto:${COMPANY.contacts.email}`} className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              <a
+                href={`mailto:${COMPANY.contacts.email}`}
+                className="hover:text-neutral-900 dark:hover:text-neutral-100"
+              >
                 {COMPANY.contacts.email}
               </a>
             </dd>

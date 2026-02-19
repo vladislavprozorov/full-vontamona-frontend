@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { QUIZ_STEPS, TOTAL_STEPS, type QuizStep } from './model';
+import { ReactNode } from "react";
+import { QUIZ_STEPS, type QuizStep, TOTAL_STEPS } from "./model";
 
 interface QuizLayoutProps {
   currentStep: QuizStep;
@@ -9,24 +9,29 @@ interface QuizLayoutProps {
   isReturning?: boolean;
 }
 
-export function QuizLayout({ currentStep, onBack, onNext, children, isReturning }: QuizLayoutProps) {
+export function QuizLayout({
+  currentStep,
+  onBack,
+  onNext,
+  children,
+  isReturning,
+}: QuizLayoutProps) {
   const currentStepNumber = QUIZ_STEPS[currentStep].number;
   const progress = (currentStepNumber / TOTAL_STEPS) * 100;
-  const hasPrev = currentStep !== 'dates' && QUIZ_STEPS[currentStep].prev;
-  const isContactsStep = currentStep === 'contacts';
+  const hasPrev = currentStep !== "dates" && QUIZ_STEPS[currentStep].prev;
+  const isContactsStep = currentStep === "contacts";
 
   return (
     <div className="w-full max-w-135 mx-auto">
-      <div 
+      <div
         className="rounded-2xl border border-neutral-100 dark:border-neutral-800 flex flex-col bg-linear-to-b from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-950"
-        style={{ 
-          boxShadow: '0 30px 80px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.03)', 
-          height: '70vh', 
-          maxHeight: '650px', 
-          minHeight: '500px' 
+        style={{
+          boxShadow: "0 30px 80px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.03)",
+          height: "70vh",
+          maxHeight: "650px",
+          minHeight: "500px",
         }}
       >
-        
         {/* Header с прогрессом */}
         <div className="p-5 md:p-9 pb-4 md:pb-6 border-b border-neutral-100 dark:border-neutral-800">
           <div className="mb-4 md:mb-5">
@@ -53,7 +58,9 @@ export function QuizLayout({ currentStep, onBack, onNext, children, isReturning 
 
         {/* Scrollable Content - быстрее анимация при возврате */}
         <div className="flex-1 overflow-y-auto px-5 md:px-9 py-5 md:py-6">
-          <div className={`animate-in fade-in slide-in-from-right-4 ${isReturning ? 'duration-150' : 'duration-300'}`}>
+          <div
+            className={`animate-in fade-in slide-in-from-right-4 ${isReturning ? "duration-150" : "duration-300"}`}
+          >
             {children}
           </div>
         </div>
@@ -73,8 +80,8 @@ export function QuizLayout({ currentStep, onBack, onNext, children, isReturning 
               ) : (
                 <div />
               )}
-              
-              {onNext && currentStep === 'priorities' && (
+
+              {onNext && currentStep === "priorities" && (
                 <button
                   type="button"
                   onClick={onNext}
@@ -86,7 +93,6 @@ export function QuizLayout({ currentStep, onBack, onNext, children, isReturning 
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

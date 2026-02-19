@@ -1,5 +1,5 @@
 export const config = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || '/api', // Fallback для development
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || "/api", // Fallback для development
 };
 export type NavigationItem = {
   label: string;
@@ -7,15 +7,15 @@ export type NavigationItem = {
 };
 export const navigation: readonly NavigationItem[] = [
   {
-    label: 'Круизы',
-    href: '#cruises',
+    label: "Круизы",
+    href: "#cruises",
   },
   {
-    label: 'О компании',
-    href: '#about',
+    label: "О компании",
+    href: "#about",
   },
   {
-    label: 'Контакты',
-    href: '#contacts',
+    label: "Контакты",
+    href: "#contacts",
   },
 ] as const;

@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export function HeroWidget() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'widget-loaded') {
+      if (event.data.type === "widget-loaded") {
         setIsLoaded(true);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   return (
@@ -28,11 +28,11 @@ export function HeroWidget() {
             </div>
           </div>
         )}
-        
+
         <iframe
           src="/cruise-widget.html"
           className="w-full border-0"
-          style={{ height: '400px', minHeight: '400px' }}
+          style={{ height: "400px", minHeight: "400px" }}
           title="Cruise Search Widget"
         />
       </div>

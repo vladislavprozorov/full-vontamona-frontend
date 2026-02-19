@@ -1,14 +1,14 @@
 /**
  * 💎 Quiz Suggestions Layer — Principal-level
- * 
+ *
  * Ответственность: Smart defaults, contextual hints
  * Бизнес-логика для UX-подсказок
- * 
+ *
  * UI НЕ работает со строками — только с domain types
  */
 
-import type { QuizFormData } from './quiz.machine';
-import type { Priority } from './quiz.domain';
+import type { Priority } from "./quiz.domain";
+import type { QuizFormData } from "./quiz.machine";
 
 /**
  * 🔥 Умные дефолты на основе выборов
@@ -18,8 +18,8 @@ export function suggestPriorities(formData: QuizFormData): Priority[] {
   const suggestions: Priority[] = [];
 
   // Если FAMILY → suggest комфорт (детские программы важны)
-  if (formData.travelers === 'FAMILY') {
-    suggestions.push('COMFORT');
+  if (formData.travelers === "FAMILY") {
+    suggestions.push("COMFORT");
   }
 
   return suggestions;

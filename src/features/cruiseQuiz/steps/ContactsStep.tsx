@@ -1,6 +1,6 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { contactsSchema, type ContactsFormData } from '../model';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { type ContactsFormData, contactsSchema } from "../model";
 
 interface ContactsStepProps {
   onSubmit: (data: ContactsFormData) => void;
@@ -10,29 +10,43 @@ interface ContactsStepProps {
   onBack: () => void;
 }
 
-export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }: ContactsStepProps) {
-  const { register, handleSubmit, formState: { errors }, setValue, watch, getValues } = useForm<ContactsFormData>({
+export function ContactsStep({
+  onSubmit,
+  isSubmitting,
+  error,
+  onRetry,
+  onBack,
+}: ContactsStepProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    getValues,
+  } = useForm<ContactsFormData>({
     resolver: zodResolver(contactsSchema),
   });
 
-  const phoneValue = watch('phone') || '';
+  const phoneValue = watch("phone") || "";
 
   const formatPhoneNumber = (value: string) => {
     // Убираем все нецифровые символы
-    const cleaned = value.replace(/\D/g, '');
-    
+    const cleaned = value.replace(/\D/g, "");
+
     // Форматируем по маске +7 (XXX) XXX-XX-XX
-    if (cleaned.length === 0) return '';
+    if (cleaned.length === 0) return "";
     if (cleaned.length <= 1) return `+7 (${cleaned}`;
     if (cleaned.length <= 4) return `+7 (${cleaned.slice(1)}`;
     if (cleaned.length <= 7) return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4)}`;
-    if (cleaned.length <= 9) return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+    if (cleaned.length <= 9)
+      return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
     return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
-    setValue('phone', formatted, { shouldValidate: true });
+    setValue("phone", formatted, { shouldValidate: true });
   };
 
   return (
@@ -52,14 +66,12 @@ export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }:
         </label>
         <input
           type="text"
-          {...register('name')}
+          {...register("name")}
           autoFocus
           placeholder="Как к вам обращаться?"
           className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 rounded-xl focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
         />
-        {errors.name && (
-          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-        )}
+        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -67,16 +79,14 @@ export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }:
           Телефон
         </label>
         <input
-          {...register('phone')}
+          {...register("phone")}
           type="tel"
           placeholder="+7 (___) ___-__-__"
           value={phoneValue}
           onChange={handlePhoneChange}
           className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 rounded-xl focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
         />
-        {errors.phone && (
-          <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-        )}
+        {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
       </div>
 
       <div>
@@ -85,13 +95,11 @@ export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }:
         </label>
         <input
           type="email"
-          {...register('email')}
+          {...register("email")}
           placeholder="your@email.com"
           className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 rounded-xl focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
       <button
@@ -101,13 +109,31 @@ export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }:
       >
         {isSubmitting ? (
           <span className="flex items-center justify-center gap-2.5 md:gap-2">
-            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             Отправка...
           </span>
-        ) : 'Отправить заявку'}
+        ) : (
+          "Отправить заявку"
+        )}
       </button>
 
       {/* Error Recovery - Stripe style */}
@@ -141,7 +167,12 @@ export function ContactsStep({ onSubmit, isSubmitting, error, onRetry, onBack }:
           className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors flex items-center gap-1.5"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Изменить ответы
         </button>

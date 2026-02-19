@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { TRUST_MARKERS } from './benefits.data';
+import { motion } from "framer-motion";
+import { TRUST_MARKERS } from "./benefits.data";
 
 export function TrustTicker() {
   // Дублируем markers для бесшовного loop
@@ -12,7 +12,7 @@ export function TrustTicker() {
       <motion.div
         className="flex items-center gap-20 md:gap-32"
         animate={{
-          x: [0, -50 + '%'],
+          x: [0, -50 + "%"],
         }}
         transition={{
           x: {
@@ -24,10 +24,7 @@ export function TrustTicker() {
         }}
       >
         {markers.map((marker, index) => (
-          <div 
-            key={`${marker.label}-${index}`}
-            className="shrink-0 text-center min-w-45"
-          >
+          <div key={`${marker.label}-${index}`} className="shrink-0 text-center min-w-45">
             <div className="text-[26px] md:text-[32px] font-bold text-foreground/60 tracking-tight">
               {marker.label}
             </div>

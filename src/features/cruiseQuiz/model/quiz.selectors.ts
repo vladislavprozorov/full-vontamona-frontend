@@ -1,12 +1,12 @@
 /**
  * Quiz Selectors Layer
- * 
+ *
  * Ответственность: Derived state
  * Вычисления на основе текущего состояния
  */
 
-import type { QuizState } from './quiz.machine';
-import { QUIZ_STEPS } from './quiz.steps.config';
+import type { QuizState } from "./quiz.machine";
+import { QUIZ_STEPS } from "./quiz.steps.config";
 
 /**
  * Можно ли перейти вперёд?

@@ -1,3 +1,1 @@
-export const colors = {
-
-} as const;
+export const colors = {} as const;

@@ -1,4 +1,4 @@
-import type { SocialLink } from './footer.types';
+import type { SocialLink } from "./footer.types";
 
 interface FooterSocialProps {
   links: SocialLink[];
@@ -7,9 +7,7 @@ interface FooterSocialProps {
 export function FooterSocial({ links }: FooterSocialProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-white font-semibold">
-        Мы в соцсетях
-      </h3>
+      <h3 className="text-white font-semibold">Мы в соцсетях</h3>
       <div className="flex gap-3">
         {links.map((social) => (
           <a

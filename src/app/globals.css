@@ -1,8 +1,5 @@
-
 @import "tailwindcss";
 @import "tw-animate-css";
-
-
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,7 +44,7 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
-  
+
   /* Footer tokens */
   --color-footer-bg: var(--footer-bg);
   --color-footer-text-primary: var(--footer-text-primary);
@@ -164,7 +161,7 @@
 /* 🌊 ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит") */
 @keyframes slowZoom {
   0% {
-    transform: scale(1.0);
+    transform: scale(1);
   }
   100% {
     transform: scale(1.04);
@@ -189,7 +186,8 @@
 
 /* ✨ Text gradient shift (текст переливается) */
 @keyframes textShift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -209,7 +207,8 @@
 
 /* 💎 Light particles (световые частицы) */
 @keyframes particles {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }

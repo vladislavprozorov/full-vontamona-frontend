@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export function PacWidget() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -11,32 +11,25 @@ export function PacWidget() {
 
     // Слушаем сообщения от iframe
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'widget-loaded') {
+      if (event.data.type === "widget-loaded") {
         console.log(event.data.success ? "✅ Виджет загружен" : "❌ Виджет не загрузился");
         setIsLoaded(true);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    
+    window.addEventListener("message", handleMessage);
+
     return () => {
-      window.removeEventListener('message', handleMessage);
+      window.removeEventListener("message", handleMessage);
     };
   }, []);
 
   return (
-    <section
-      id="cruises"
-      className="mx-auto max-w-7xl px-4 py-24"
-    >
+    <section id="cruises" className="mx-auto max-w-7xl px-4 py-24">
       <div className="rounded-xl border bg-background p-6 shadow-sm">
         <header className="mb-4">
-          <h2 className="text-2xl font-semibold">
-            Подбор круиза
-          </h2>
-          <p className="text-muted-foreground">
-            Найдите круиз по датам и бюджету
-          </p>
+          <h2 className="text-2xl font-semibold">Подбор круиза</h2>
+          <p className="text-muted-foreground">Найдите круиз по датам и бюджету</p>
         </header>
 
         {/* Виджет в iframe */}
@@ -49,11 +42,11 @@ export function PacWidget() {
               </div>
             </div>
           )}
-          
+
           <iframe
             src="/cruise-widget.html"
             className="w-full border-0"
-            style={{ height: `${iframeHeight}px`, minHeight: '600px' }}
+            style={{ height: `${iframeHeight}px`, minHeight: "600px" }}
             title="Cruise Widget"
             onLoad={() => {
               console.log("📦 iframe загружен");

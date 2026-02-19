@@ -1,11 +1,14 @@
-import type { HeaderVariant as TokenHeaderVariant, HeaderState } from '@/design-system/tokens/header';
+import type {
+  HeaderState,
+  HeaderVariant as TokenHeaderVariant,
+} from "@/design-system/tokens/header";
 
 export type HeaderVariant = TokenHeaderVariant;
 export type { HeaderState };
 
 export interface HeaderProps {
-    variant?: HeaderVariant;
-    className?: string;
+  variant?: HeaderVariant;
+  className?: string;
 }
 
 export interface HeaderChildProps {
@@ -17,15 +20,15 @@ export type NavItem =
   | {
       label: string;
       href: string;
-      type: 'route';
+      type: "route";
     }
   | {
       label: string;
       href: `#${string}`;
-      type: 'anchor';
+      type: "anchor";
     }
   | {
       label: string;
       href: string;
-      type: 'external';
+      type: "external";
     };

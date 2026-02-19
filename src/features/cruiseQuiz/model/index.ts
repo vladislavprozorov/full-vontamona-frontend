@@ -1,74 +1,63 @@
 /**
  * 💎 Model Layer — Public API
- * 
+ *
  * Чистые экспорты для использования в UI
  */
 
+export type {
+  DateRange,
+  DomainOption,
+  Priority,
+  Region,
+  Travelers,
+} from "./quiz.domain";
+export {
+  DATE_RANGE_OPTIONS,
+  getLabelForDateRange,
+  getLabelForPriority,
+  getLabelForRegion,
+  getLabelForTravelers,
+  PRIORITY_OPTIONS,
+  REGION_OPTIONS,
+  TRAVELERS_OPTIONS,
+} from "./quiz.domain";
 // Types
 export type {
-  QuizStep,
+  QuizEvent,
   QuizFormData,
   QuizState,
-  QuizEvent,
-} from './quiz.machine';
-
+  QuizStep,
+} from "./quiz.machine";
+export { getDuration, MOTION } from "./quiz.motion";
+export type { SavedDraft } from "./quiz.persistence";
+// Effects
+export { clearDraft, loadDraft, saveDraftDebounced, saveDraftImmediate } from "./quiz.persistence";
+// Reducer
+export { initialState, quizReducer } from "./quiz.reducer";
+// Selectors
+export {
+  canGoBack,
+  canGoNext,
+  canSubmit,
+  getCurrentStepNumber,
+  getProgress,
+} from "./quiz.selectors";
 export type {
   QuizStepConfig,
   QuizStepRenderProps,
   SelectingOption,
-} from './quiz.steps.config';
-
-export type {
-  Travelers,
-  Region,
-  DateRange,
-  Priority,
-  DomainOption,
-} from './quiz.domain';
-
-export type { SuccessMessage } from './success.copy';
-export type { SavedDraft } from './quiz.persistence';
-export type { SubmitResult } from './quiz.submit';
-export type { ContactsFormData } from './quiz.validation';
-
+} from "./quiz.steps.config";
 // Constants
 export {
   QUIZ_STEPS,
   TOTAL_STEPS,
-} from './quiz.steps.config';
-
-export {
-  TRAVELERS_OPTIONS,
-  REGION_OPTIONS,
-  DATE_RANGE_OPTIONS,
-  PRIORITY_OPTIONS,
-  getLabelForTravelers,
-  getLabelForRegion,
-  getLabelForDateRange,
-  getLabelForPriority,
-} from './quiz.domain';
-
-export { MOTION, getDuration } from './quiz.motion';
-
-// Reducer
-export { quizReducer, initialState } from './quiz.reducer';
-
-// Effects
-export { saveDraftDebounced, saveDraftImmediate, loadDraft, clearDraft } from './quiz.persistence';
-export { submitQuiz } from './quiz.submit';
-
-// Selectors
-export {
-  canGoNext,
-  canGoBack,
-  getProgress,
-  getCurrentStepNumber,
-  canSubmit,
-} from './quiz.selectors';
-
+} from "./quiz.steps.config";
+export type { SubmitResult } from "./quiz.submit";
+export { submitQuiz } from "./quiz.submit";
 // Business Logic
-export { suggestPriorities } from './quiz.suggestions';
-export { getPersonalizedSuccessMessage } from './success.copy';
-
+export { suggestPriorities } from "./quiz.suggestions";
+export type { ContactsFormData } from "./quiz.validation";
 // Validation
-export { contactsSchema } from './quiz.validation';
+export { contactsSchema } from "./quiz.validation";
+export type { SuccessMessage } from "./success.copy";
+export { getPersonalizedSuccessMessage } from "./success.copy";

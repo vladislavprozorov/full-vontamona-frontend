@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { HeaderNav } from './header-nav';
-import { headerTokens } from '@/design-system/tokens/header';
-import { HeaderActions } from './header-actions';
-import type { HeaderProps, HeaderState } from './header.types';
-import Link from 'next/link';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { headerTokens } from "@/design-system/tokens/header";
+import type { HeaderProps, HeaderState } from "./header.types";
+import { HeaderActions } from "./header-actions";
+import { HeaderNav } from "./header-nav";
 
-export function Header({ variant = 'solid', className }: HeaderProps) {
+export function Header({ variant = "solid", className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -15,17 +15,17 @@ export function Header({ variant = 'solid', className }: HeaderProps) {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // ✅ Разделяем variant (тип) и state (состояние)
-  const state: HeaderState = isScrolled ? 'scrolled' : 'default';
+  const state: HeaderState = isScrolled ? "scrolled" : "default";
   const styles = headerTokens.variants[variant][state];
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${className || ''}`}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${className || ""}`}
       style={{
         height: headerTokens.height[state],
         background: styles.background,
@@ -35,19 +35,19 @@ export function Header({ variant = 'solid', className }: HeaderProps) {
         boxShadow: styles.boxShadow,
       }}
     >
-      <div 
+      <div
         className="mx-auto flex items-center justify-between px-4 transition-all duration-300"
-        style={{ 
-          height: '100%',
-          maxWidth: '1280px',
+        style={{
+          height: "100%",
+          maxWidth: "1280px",
         }}
       >
         {/* LOGO */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="font-semibold transition-all duration-300"
           style={{
-            fontSize: isScrolled ? '1rem' : '1.125rem',
+            fontSize: isScrolled ? "1rem" : "1.125rem",
           }}
         >
           Vontamona

@@ -1,24 +1,24 @@
 /**
  * 💎 useQuiz — React Integration Layer
- * 
+ *
  * Ответственность: Координация между React и бизнес-логикой
  * Thin orchestrator — никакой бизнес-логики
  */
 
-import { useReducer, useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useReducer, useState } from "react";
 import {
-  quizReducer,
   initialState,
   loadDraft,
+  MOTION, // 🔥 Import motion tokens
+  type Priority,
+  type QuizEvent,
+  type QuizState,
+  quizReducer,
+  type SelectingOption,
   saveDraftDebounced,
   saveDraftImmediate,
   submitQuiz,
-  MOTION, // 🔥 Import motion tokens
-  type QuizState,
-  type QuizEvent,
-  type Priority,
-  type SelectingOption,
-} from './model';
+} from "./model";
 
 export function useQuiz() {
   const [state, dispatch] = useReducer(quizReducer, initialState);
@@ -49,35 +49,35 @@ export function useQuiz() {
   const restoreDraft = useCallback(() => {
     const draft = loadDraft();
     if (draft) {
-      dispatch({ type: 'RESTORE_DRAFT', state: draft.state });
+      dispatch({ type: "RESTORE_DRAFT", state: draft.state });
       setShowRestoreDialog(false);
     }
   }, []);
 
   // Start fresh
   const startFresh = useCallback(() => {
-    dispatch({ type: 'START_FRESH' });
+    dispatch({ type: "START_FRESH" });
     setShowRestoreDialog(false);
   }, []);
 
   // Navigation
   const goToNextStep = useCallback(() => {
-    dispatch({ type: 'NEXT' });
+    dispatch({ type: "NEXT" });
   }, []);
 
   const goToPrevStep = useCallback(() => {
-    dispatch({ type: 'PREV' });
+    dispatch({ type: "PREV" });
   }, []);
 
   // Option selection with visual feedback
-  const handleOptionSelect = useCallback((eventType: QuizEvent['type'], value: any) => {
+  const handleOptionSelect = useCallback((eventType: QuizEvent["type"], value: any) => {
     // 🎯 Haptic feedback (вибрация на поддерживаемых устройствах)
-    if ('vibrate' in navigator) {
+    if ("vibrate" in navigator) {
       navigator.vibrate(10); // Короткая вибрация 10ms
     }
-    
+
     setSelectingOption(value);
-    
+
     setTimeout(() => {
       dispatch({ type: eventType, value } as QuizEvent);
       setSelectingOption(null);
@@ -86,52 +86,58 @@ export function useQuiz() {
 
   // Priority toggle
   const togglePriority = useCallback((priority: Priority) => {
-    dispatch({ type: 'TOGGLE_PRIORITY', value: priority });
+    dispatch({ type: "TOGGLE_PRIORITY", value: priority });
   }, []);
 
   // Submit handler
-  const submitContacts = useCallback(async (contactsData: { name: string; phone?: string; email?: string }) => {
-    // 🔥 Сначала подготовим полные данные
-    const completeFormData = {
-      ...state.formData,
-      name: contactsData.name,
-      phone: contactsData.phone,
-      email: contactsData.email,
-    };
+  const submitContacts = useCallback(
+    async (contactsData: { name: string; phone?: string; email?: string }) => {
+      // 🔥 Сначала подготовим полные данные
+      const completeFormData = {
+        ...state.formData,
+        name: contactsData.name,
+        phone: contactsData.phone,
+        email: contactsData.email,
+      };
 
-    // Update contacts в state
-    dispatch({
-      type: 'UPDATE_CONTACTS',
-      name: contactsData.name,
-      phone: contactsData.phone,
-      email: contactsData.email,
-    });
+      // Update contacts в state
+      dispatch({
+        type: "UPDATE_CONTACTS",
+        name: contactsData.name,
+        phone: contactsData.phone,
+        email: contactsData.email,
+      });
 
-    // Submit с ПОЛНЫМИ данными
-    dispatch({ type: 'SUBMIT_REQUEST' });
-    
-    // 🎯 Smart delay для видимости спиннера (UX: perceived performance)
-    // Если API быстрый → добавляем задержку
-    // Если медленный → не тормозим дополнительно
-    const start = performance.now();
-    const result = await submitQuiz(completeFormData);
-    const elapsed = performance.now() - start;
-    
-    if (elapsed < MOTION.minSubmitDelay) {
-      await new Promise(resolve => setTimeout(resolve, MOTION.minSubmitDelay - elapsed));
-    }
+      // Submit с ПОЛНЫМИ данными
+      dispatch({ type: "SUBMIT_REQUEST" });
 
-    if (result.success) {
-      dispatch({ type: 'SUBMIT_SUCCESS', applicationId: result.applicationId! });
-    } else {
-      dispatch({ type: 'SUBMIT_ERROR', message: result.error! });
-    }
-  }, [state.formData]);
+      // 🎯 Smart delay для видимости спиннера (UX: perceived performance)
+      // Если API быстрый → добавляем задержку
+      // Если медленный → не тормозим дополнительно
+      const start = performance.now();
+      const result = await submitQuiz(completeFormData);
+      const elapsed = performance.now() - start;
+
+      if (elapsed < MOTION.minSubmitDelay) {
+        await new Promise((resolve) => setTimeout(resolve, MOTION.minSubmitDelay - elapsed));
+      }
+
+      if (result.success) {
+        dispatch({ type: "SUBMIT_SUCCESS", applicationId: result.applicationId! });
+      } else {
+        dispatch({ type: "SUBMIT_ERROR", message: result.error! });
+      }
+    },
+    [state.formData],
+  );
 
   // Retry submit
-  const retrySubmit = useCallback((contactsData: { name: string; phone?: string; email?: string }) => {
-    submitContacts(contactsData);
-  }, [submitContacts]);
+  const retrySubmit = useCallback(
+    (contactsData: { name: string; phone?: string; email?: string }) => {
+      submitContacts(contactsData);
+    },
+    [submitContacts],
+  );
 
   return {
     // State
@@ -143,7 +149,7 @@ export function useQuiz() {
     isReturning: state.isReturning,
     selectingOption,
     showRestoreDialog,
-    
+
     // Actions
     dispatch,
     goToNextStep,

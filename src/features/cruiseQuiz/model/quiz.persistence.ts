@@ -1,15 +1,15 @@
 /**
  * 💎 Quiz Persistence Layer — Principal-level
- * 
+ *
  * Ответственность: localStorage operations
  * Не знает про React, только про State
- * 
+ *
  * Versioning: Автоматический clearDraft при несовпадении версий
  */
 
-import type { QuizState } from './quiz.machine';
+import type { QuizState } from "./quiz.machine";
 
-const STORAGE_KEY = 'quiz-draft';
+const STORAGE_KEY = "quiz-draft";
 const EXPIRY_MS = 3600000; // 1 час
 const VERSION = 1; // 🔥 Инкрементируй при изменении структуры State
 
@@ -30,7 +30,7 @@ export function saveDraftDebounced(state: QuizState): void {
   if (saveTimeout) {
     clearTimeout(saveTimeout);
   }
-  
+
   // Ставим новый таймер
   saveTimeout = setTimeout(() => {
     saveDraftImmediate(state);
@@ -48,7 +48,7 @@ export function saveDraftImmediate(state: QuizState): void {
     clearTimeout(saveTimeout);
     saveTimeout = null;
   }
-  
+
   saveDraft(state);
 }
 
@@ -57,13 +57,13 @@ export function saveDraftImmediate(state: QuizState): void {
  */
 function saveDraft(state: QuizState): void {
   // Не сохраняем success screen
-  if (state.currentStep === 'success') {
+  if (state.currentStep === "success") {
     clearDraft();
     return;
   }
 
   // 🔥 Не сохраняем начальный state (dates без выбора)
-  if (state.currentStep === 'dates' && !state.formData.dateRange) {
+  if (state.currentStep === "dates" && !state.formData.dateRange) {
     return;
   }
 
@@ -76,7 +76,7 @@ function saveDraft(state: QuizState): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
   } catch (error) {
-    console.warn('Failed to save quiz draft:', error);
+    console.warn("Failed to save quiz draft:", error);
   }
 }
 
@@ -104,14 +104,14 @@ export function loadDraft(): SavedDraft | null {
     }
 
     // Не показываем restore для success
-    if (draft.state.currentStep === 'success') {
+    if (draft.state.currentStep === "success") {
       clearDraft();
       return null;
     }
 
     return draft;
   } catch (error) {
-    console.warn('Failed to load quiz draft:', error);
+    console.warn("Failed to load quiz draft:", error);
     return null;
   }
 }
@@ -123,6 +123,6 @@ export function clearDraft(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.warn('Failed to clear quiz draft:', error);
+    console.warn("Failed to clear quiz draft:", error);
   }
 }
