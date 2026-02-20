@@ -17,16 +17,16 @@ const CruiseWidget = (props: CruiseWidgetSettings) => {
     console.log("🚀 CruiseWidget: Инициализация через iframe");
 
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'widget-loaded') {
+      if (event.data.type === "widget-loaded") {
         console.log(event.data.success ? "✅ Виджет загружен" : "❌ Виджет не загрузился");
         setIsLoaded(true);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    
+    window.addEventListener("message", handleMessage);
+
     return () => {
-      window.removeEventListener('message', handleMessage);
+      window.removeEventListener("message", handleMessage);
     };
   }, []);
 
@@ -41,11 +41,11 @@ const CruiseWidget = (props: CruiseWidgetSettings) => {
             </div>
           </div>
         )}
-        
+
         <iframe
           src="/cruise-widget.html"
           className="w-full border-0 rounded-lg"
-          style={{ height: '600px', minHeight: '600px' }}
+          style={{ height: "600px", minHeight: "600px" }}
           title="Cruise Widget"
           onLoad={() => {
             console.log("📦 iframe загружен");

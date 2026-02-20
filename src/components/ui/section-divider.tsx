@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 export function SectionDivider() {
   return (
@@ -9,30 +9,30 @@ export function SectionDivider() {
       <div className="absolute inset-0 flex items-center" aria-hidden="true">
         <div className="w-full border-t border-border/50" />
       </div>
-      
+
       {/* Центральный элемент */}
       <div className="relative flex justify-center">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           whileInView={{ scale: 1, rotate: 0 }}
           viewport={{ once: true }}
-          transition={{ 
+          transition={{
             type: "spring",
             stiffness: 260,
             damping: 20,
-            delay: 0.2
+            delay: 0.2,
           }}
           className="bg-background px-4"
         >
           <div className="flex items-center gap-3">
             <motion.div
-              animate={{ 
+              animate={{
                 rotate: 360,
               }}
-              transition={{ 
+              transition={{
                 duration: 20,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "linear",
               }}
               className="w-2 h-2 rounded-full bg-primary"
             />
@@ -40,13 +40,13 @@ export function SectionDivider() {
               Готовы подобрать круиз?
             </span>
             <motion.div
-              animate={{ 
+              animate={{
                 rotate: -360,
               }}
-              transition={{ 
+              transition={{
                 duration: 20,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "linear",
               }}
               className="w-2 h-2 rounded-full bg-primary"
             />

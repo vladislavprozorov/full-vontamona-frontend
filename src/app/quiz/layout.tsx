@@ -1,10 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
-export default function QuizLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function QuizLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {children}

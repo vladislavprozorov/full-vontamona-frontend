@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useQuiz } from './quiz.hooks';
-import { QuizLayout } from './QuizLayout';
-import { SuccessScreen } from './SuccessScreen';
-import { QUIZ_STEPS } from './model';
+import { QUIZ_STEPS } from "./model";
+import { QuizLayout } from "./QuizLayout";
+import { useQuiz } from "./quiz.hooks";
+import { SuccessScreen } from "./SuccessScreen";
 
 export function QuizForm() {
   const {
@@ -26,9 +26,9 @@ export function QuizForm() {
   } = useQuiz();
 
   // ========== SUCCESS SCREEN ==========
-  if (currentStep === 'success') {
+  if (currentStep === "success") {
     return (
-      <SuccessScreen 
+      <SuccessScreen
         applicationId={applicationId}
         phone={formData.phone}
         email={formData.email}
@@ -40,11 +40,11 @@ export function QuizForm() {
   // ========== RENDER STEP FROM CONFIG ==========
   const stepConfig = QUIZ_STEPS[currentStep];
   const stepContent = stepConfig.render({
-    state: { 
-      currentStep, 
-      formData, 
-      isSubmitting, 
-      submitError, 
+    state: {
+      currentStep,
+      formData,
+      isSubmitting,
+      submitError,
       applicationId,
       isReturning,
     },
@@ -87,11 +87,11 @@ export function QuizForm() {
           </div>
         </div>
       )}
-      
+
       <QuizLayout
         currentStep={currentStep}
         onBack={goToPrevStep}
-        onNext={currentStep === 'priorities' ? goToNextStep : undefined}
+        onNext={currentStep === "priorities" ? goToNextStep : undefined}
         isReturning={isReturning}
       >
         {stepContent}

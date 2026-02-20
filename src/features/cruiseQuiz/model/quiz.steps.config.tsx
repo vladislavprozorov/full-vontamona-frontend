@@ -1,21 +1,21 @@
 /**
  * Quiz Steps Configuration
- * 
+ *
  * Централизованная конфигурация всех шагов квиза.
  * UI больше не знает про шаги — просто рендерит stepConfig.render()
- * 
+ *
  * Staff-level: FSM владеет конфигурацией, UI — тупой рендерер
  */
 
-import { JSX } from 'react';
-import type { QuizState, QuizStep, QuizEvent } from './quiz.machine';
-import type { Priority, DateRange, Travelers, Region } from './quiz.domain';
-import { suggestPriorities } from './quiz.suggestions';
-import { DatesStep } from '../steps/DatesStep';
-import { TravelersStep } from '../steps/TravelersStep';
-import { RegionStep } from '../steps/RegionStep';
-import { PrioritiesStep } from '../steps/PrioritiesStep';
-import { ContactsStep } from '../steps/ContactsStep';
+import { JSX } from "react";
+import { ContactsStep } from "../steps/ContactsStep";
+import { DatesStep } from "../steps/DatesStep";
+import { PrioritiesStep } from "../steps/PrioritiesStep";
+import { RegionStep } from "../steps/RegionStep";
+import { TravelersStep } from "../steps/TravelersStep";
+import type { DateRange, Priority, Region, Travelers } from "./quiz.domain";
+import type { QuizEvent, QuizState, QuizStep } from "./quiz.machine";
+import { suggestPriorities } from "./quiz.suggestions";
 
 // ========== Step Configuration Interface ==========
 export interface QuizStepConfig {
@@ -32,7 +32,7 @@ export type SelectingOption = DateRange | Travelers | Region | Priority | null;
 // ========== Render Props (все что нужно степу от UI) ==========
 export interface QuizStepRenderProps {
   state: QuizState;
-  onOptionSelect: (eventType: QuizEvent['type'], value: any) => void;
+  onOptionSelect: (eventType: QuizEvent["type"], value: any) => void;
   onTogglePriority: (priority: Priority) => void;
   onNext: () => void;
   onSubmit: (contactsData: any) => void;
@@ -44,52 +44,52 @@ export interface QuizStepRenderProps {
 // ========== Steps Configuration ==========
 export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
   dates: {
-    next: 'travelers',
+    next: "travelers",
     prev: null,
     number: 1,
-    title: 'Даты',
+    title: "Даты",
     render: ({ state, onOptionSelect, selectingOption }) => (
       <DatesStep
-        onSelect={(value) => onOptionSelect('SELECT_DATE_RANGE', value)}
+        onSelect={(value) => onOptionSelect("SELECT_DATE_RANGE", value)}
         selectedValue={state.formData.dateRange}
         selectingValue={selectingOption as DateRange | null | undefined}
       />
     ),
   },
-  
+
   travelers: {
-    next: 'region',
-    prev: 'dates',
+    next: "region",
+    prev: "dates",
     number: 2,
-    title: 'Путешественники',
+    title: "Путешественники",
     render: ({ state, onOptionSelect, selectingOption }) => (
       <TravelersStep
-        onSelect={(value) => onOptionSelect('SELECT_TRAVELERS', value)}
+        onSelect={(value) => onOptionSelect("SELECT_TRAVELERS", value)}
         selectedValue={state.formData.travelers}
         selectingValue={selectingOption as Travelers | null | undefined}
       />
     ),
   },
-  
+
   region: {
-    next: 'priorities',
-    prev: 'travelers',
+    next: "priorities",
+    prev: "travelers",
     number: 3,
-    title: 'Регион',
+    title: "Регион",
     render: ({ state, onOptionSelect, selectingOption }) => (
       <RegionStep
-        onSelect={(value) => onOptionSelect('SELECT_REGION', value)}
+        onSelect={(value) => onOptionSelect("SELECT_REGION", value)}
         selectedValue={state.formData.region}
         selectingValue={selectingOption as Region | null | undefined}
       />
     ),
   },
-  
+
   priorities: {
-    next: 'contacts',
-    prev: 'region',
+    next: "contacts",
+    prev: "region",
     number: 4,
-    title: 'Приоритеты',
+    title: "Приоритеты",
     render: ({ state, onTogglePriority, onNext }) => (
       <PrioritiesStep
         selectedPriorities={state.formData.priorities}
@@ -99,28 +99,28 @@ export const QUIZ_STEPS: Record<QuizStep, QuizStepConfig> = {
       />
     ),
   },
-  
+
   contacts: {
-    next: 'success',
-    prev: 'priorities',
+    next: "success",
+    prev: "priorities",
     number: 5,
-    title: 'Контакты',
+    title: "Контакты",
     render: ({ state, onSubmit, onRetry, onBack }) => (
       <ContactsStep
         onSubmit={onSubmit}
         isSubmitting={state.isSubmitting}
-        error={state.submitError || ''}
+        error={state.submitError || ""}
         onRetry={onRetry}
         onBack={onBack}
       />
     ),
   },
-  
+
   success: {
     next: null,
     prev: null,
     number: 6,
-    title: 'Готово',
+    title: "Готово",
     render: () => <></>, // Success screen handled separately in quiz-form
   },
 };

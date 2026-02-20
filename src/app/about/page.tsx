@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Header } from '@/components/layout/header/header';
-import { motion } from 'framer-motion';
-import { BENEFITS, COMPANY_FACTS } from '@/components/sections/benefits/benefits.data';
-import { BenefitItem } from '@/components/sections/benefits/benefits-item';
-import { Award, Users, MapPin, ShieldCheck } from 'lucide-react';
-import Link from 'next/link';
+import { motion } from "framer-motion";
+import { Award, MapPin, ShieldCheck, Users } from "lucide-react";
+import Link from "next/link";
+import { Header } from "@/components/layout/header/header";
+import { BENEFITS, COMPANY_FACTS } from "@/components/sections/benefits/benefits.data";
+import { BenefitItem } from "@/components/sections/benefits/benefits-item";
 
 export default function AboutPage() {
   return (
@@ -23,12 +23,10 @@ export default function AboutPage() {
               transition={{ duration: 0.6 }}
               className="text-center max-w-3xl mx-auto"
             >
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                О компании VON TAMONA
-              </h1>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">О компании VON TAMONA</h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Мы делаем круизные путешествия доступными и комфортными для каждого. 
-                С 2020 года помогаем клиентам открывать мир с палубы лучших лайнеров.
+                Мы делаем круизные путешествия доступными и комфортными для каждого. С 2020 года
+                помогаем клиентам открывать мир с палубы лучших лайнеров.
               </p>
             </motion.div>
           </div>
@@ -47,22 +45,20 @@ export default function AboutPage() {
                 <span className="inline-block mb-4 px-4 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-full">
                   Наша история
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Как всё начиналось
-                </h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Как всё начиналось</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    VON TAMONA была основана в 2020 году группой энтузиастов круизного туризма. 
-                    Мы заметили, что в России круизы воспринимаются как роскошь, доступная единицам.
+                    VON TAMONA была основана в 2020 году группой энтузиастов круизного туризма. Мы
+                    заметили, что в России круизы воспринимаются как роскошь, доступная единицам.
                   </p>
                   <p>
-                    Наша миссия — сделать круизные путешествия понятными, доступными и комфортными 
-                    для каждого. Мы работаем напрямую с ведущими круизными линиями, что позволяет 
+                    Наша миссия — сделать круизные путешествия понятными, доступными и комфортными
+                    для каждого. Мы работаем напрямую с ведущими круизными линиями, что позволяет
                     предлагать лучшие цены на рынке.
                   </p>
                   <p>
-                    Сегодня мы — официальный партнёр MSC Cruises и других крупнейших 
-                    операторов. За 5+ лет отправили в круизы более 5000 довольных клиентов.
+                    Сегодня мы — официальный партнёр MSC Cruises и других крупнейших операторов. За
+                    5+ лет отправили в круизы более 5000 довольных клиентов.
                   </p>
                 </div>
               </motion.div>
@@ -104,21 +100,13 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Почему выбирают нас
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Все преимущества работы с VON TAMONA
-              </p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Почему выбирают нас</h2>
+              <p className="text-lg text-muted-foreground">Все преимущества работы с VON TAMONA</p>
             </motion.header>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {BENEFITS.map((benefit, index) => (
-                <BenefitItem 
-                  key={benefit.title} 
-                  {...benefit} 
-                  index={index}
-                />
+                <BenefitItem key={benefit.title} {...benefit} index={index} />
               ))}
             </div>
           </div>
@@ -133,9 +121,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                VON TAMONA в цифрах
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">VON TAMONA в цифрах</h2>
             </motion.header>
 
             <div className="grid gap-8 md:grid-cols-2">
@@ -149,17 +135,11 @@ export default function AboutPage() {
                   className="p-8 rounded-xl bg-transparent border border-border/60 hover:border-border hover:shadow-md transition-all"
                 >
                   <div className="flex items-start gap-4 mb-6">
-                    <div className="text-primary">
-                      {fact.icon}
-                    </div>
-                    <h3 className="text-2xl font-bold">
-                      {fact.title}
-                    </h3>
+                    <div className="text-primary">{fact.icon}</div>
+                    <h3 className="text-2xl font-bold">{fact.title}</h3>
                   </div>
-                  <p className="text-muted-foreground text-lg mb-6">
-                    {fact.description}
-                  </p>
-                  
+                  <p className="text-muted-foreground text-lg mb-6">{fact.description}</p>
+
                   {/* Дополнительные детали */}
                   {index === 0 && (
                     <ul className="space-y-2 text-sm text-muted-foreground">
@@ -173,7 +153,7 @@ export default function AboutPage() {
                       </li>
                     </ul>
                   )}
-                  
+
                   {index === 1 && (
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-center gap-2">

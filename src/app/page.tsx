@@ -1,17 +1,17 @@
-import { Header } from '@/components/layout/header/header';
-import { Hero } from '@/components/sections/hero';
-import { BenefitsSection } from '@/components/sections/benefits';
-import { SectionDivider } from '@/components/ui/section-divider';
-import { LazyPacWidget } from '@/components/lazy-pac-widget';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import Link from "next/link";
+import { Header } from "@/components/layout/header/header";
+import { LazyPacWidget } from "@/components/lazy-pac-widget";
+import { BenefitsSection } from "@/components/sections/benefits";
+import { Hero } from "@/components/sections/hero";
+import { Button } from "@/components/ui/button";
+import { SectionDivider } from "@/components/ui/section-divider";
 
 export default function HomePage() {
   return (
     <>
       {/* TRANSPARENT header - для главной страницы с hero */}
       <Header variant="transparent" />
-      
+
       <main>
         {/* HERO */}
         <Hero />
@@ -34,7 +34,6 @@ export default function HomePage() {
           </div>
           <LazyPacWidget />
         </section>
-
       </main>
     </>
   );

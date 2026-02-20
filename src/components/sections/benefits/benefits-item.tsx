@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import type { Benefit } from './benefits.types';
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import type { Benefit } from "./benefits.types";
 
 interface BenefitItemProps extends Benefit {
   index: number;
@@ -14,19 +14,20 @@ export function BenefitItem({ title, description, icon, featured, index }: Benef
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ 
-        duration: 0.5, 
+      transition={{
+        duration: 0.5,
         delay: index * 0.1,
-        ease: [0.21, 0.47, 0.32, 0.98]
+        ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className="h-full"
     >
-      <Card 
+      <Card
         className={`
           h-full flex flex-col bg-white relative overflow-hidden transition-all duration-300 ease-out
-          ${featured 
-            ? 'border-border/40 hover:border-border hover:shadow-[0_20px_40px_rgba(15,23,42,0.08)] before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-primary before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300' 
-            : 'border-border/40 hover:border-border hover:shadow-[0_12px_40px_rgba(15,23,42,0.06)] before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-primary before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300'
+          ${
+            featured
+              ? "border-border/40 hover:border-border hover:shadow-[0_20px_40px_rgba(15,23,42,0.08)] before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-primary before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300"
+              : "border-border/40 hover:border-border hover:shadow-[0_12px_40px_rgba(15,23,42,0.06)] before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-primary before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300"
           }
         `}
       >
@@ -34,9 +35,7 @@ export function BenefitItem({ title, description, icon, featured, index }: Benef
           {/* ICON */}
           {icon && (
             <div className="h-11 w-11 rounded-full border border-border/60 flex items-center justify-center mb-4 bg-[hsl(215_20%_97%)]">
-              <div className="text-primary [&>svg]:w-5 [&>svg]:h-5">
-                {icon}
-              </div>
+              <div className="text-primary [&>svg]:w-5 [&>svg]:h-5">{icon}</div>
             </div>
           )}
 
@@ -46,9 +45,7 @@ export function BenefitItem({ title, description, icon, featured, index }: Benef
           </h3>
 
           {/* DESCRIPTION */}
-          <p className="text-[14px] leading-relaxed text-neutral-600">
-            {description}
-          </p>
+          <p className="text-[14px] leading-relaxed text-neutral-600">{description}</p>
 
           {/* Якорь внизу (опционально) */}
           {featured && (

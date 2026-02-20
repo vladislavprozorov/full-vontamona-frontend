@@ -1,10 +1,10 @@
-import type { QuizFormData } from './quiz.machine';
 import {
   getLabelForDateRange,
-  getLabelForTravelers,
-  getLabelForRegion,
   getLabelForPriority,
-} from './quiz.domain';
+  getLabelForRegion,
+  getLabelForTravelers,
+} from "./quiz.domain";
+import type { QuizFormData } from "./quiz.machine";
 
 export interface SubmitResult {
   success: boolean;
@@ -21,7 +21,7 @@ export async function submitQuiz(formData: QuizFormData): Promise<SubmitResult> 
     if (!formData.name || !formData.phone || !formData.email) {
       return {
         success: false,
-        error: 'Заполните все обязательные поля',
+        error: "Заполните все обязательные поля",
       };
     }
 
@@ -34,38 +34,38 @@ export async function submitQuiz(formData: QuizFormData): Promise<SubmitResult> 
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
-      source: 'quiz-form',
+      source: "quiz-form",
     };
 
     // Отправка на /api/quiz
-    const response = await fetch('/api/quiz', {
-      method: 'POST',
+    const response = await fetch("/api/quiz", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Quiz submit failed:', errorText);
+      console.error("Quiz submit failed:", errorText);
       return {
         success: false,
-        error: 'Ошибка отправки. Попробуйте позже.',
+        error: "Ошибка отправки. Попробуйте позже.",
       };
     }
 
     const result = await response.json();
-    
+
     return {
       success: true,
       applicationId: result.applicationId || `CR-${Date.now()}`,
     };
   } catch (error) {
-    console.error('Quiz submit failed:', error);
+    console.error("Quiz submit failed:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Неизвестная ошибка',
+      error: error instanceof Error ? error.message : "Неизвестная ошибка",
     };
   }
 }

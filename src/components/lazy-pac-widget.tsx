@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Lazy loading виджета (он не нужен сразу)
 const PacWidget = dynamic(
-  () => import('@/features/pac-widget/pac-widget').then(mod => ({ default: mod.PacWidget })),
+  () => import("@/features/pac-widget/pac-widget").then((mod) => ({ default: mod.PacWidget })),
   {
     ssr: false,
     loading: () => (
@@ -18,8 +18,8 @@ const PacWidget = dynamic(
           </div>
         </div>
       </div>
-    )
-  }
+    ),
+  },
 );
 
 export function LazyPacWidget() {

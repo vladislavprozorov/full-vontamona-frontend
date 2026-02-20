@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export function FooterInfo() {
   return (
@@ -12,10 +12,10 @@ export function FooterInfo() {
         <span className="text-white/90">Vonta</span>
         <span className="text-white">mona</span>
       </Link>
-      
+
       <p className="text-white/70 text-sm max-w-xs">
-        Эксклюзивные круизы премиум-класса по лучшим направлениям мира. 
-        Индивидуальный подход к каждому клиенту.
+        Эксклюзивные круизы премиум-класса по лучшим направлениям мира. Индивидуальный подход к
+        каждому клиенту.
       </p>
     </div>
   );

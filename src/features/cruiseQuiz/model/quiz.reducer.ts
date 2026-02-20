@@ -1,6 +1,6 @@
 /**
  * 💎 Quiz Reducer — Principal-level FSM
- * 
+ *
  * Преимущества:
  * - Невозможно попасть в success без submit
  * - Все переходы в одном месте (goNext helper)
@@ -8,11 +8,11 @@
  * - Compile-time гарантии
  */
 
-import type { QuizState, QuizEvent } from './quiz.machine';
-import { QUIZ_STEPS } from './quiz.steps.config';
+import type { QuizEvent, QuizState } from "./quiz.machine";
+import { QUIZ_STEPS } from "./quiz.steps.config";
 
 export const initialState: QuizState = {
-  currentStep: 'dates',
+  currentStep: "dates",
   formData: {
     priorities: [],
   },
@@ -25,9 +25,7 @@ export const initialState: QuizState = {
  */
 function goNext(state: QuizState): QuizState {
   const next = QUIZ_STEPS[state.currentStep].next;
-  return next
-    ? { ...state, currentStep: next, isReturning: false }
-    : state;
+  return next ? { ...state, currentStep: next, isReturning: false } : state;
 }
 
 /**
@@ -36,25 +34,25 @@ function goNext(state: QuizState): QuizState {
 export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
   switch (event.type) {
     // ========== Field Updates ==========
-    case 'SELECT_DATE_RANGE':
+    case "SELECT_DATE_RANGE":
       return goNext({
         ...state,
         formData: { ...state.formData, dateRange: event.value },
       });
 
-    case 'SELECT_TRAVELERS':
+    case "SELECT_TRAVELERS":
       return goNext({
         ...state,
         formData: { ...state.formData, travelers: event.value },
       });
 
-    case 'SELECT_REGION':
+    case "SELECT_REGION":
       return goNext({
         ...state,
         formData: { ...state.formData, region: event.value },
       });
 
-    case 'TOGGLE_PRIORITY': {
+    case "TOGGLE_PRIORITY": {
       const current = state.formData.priorities;
       const updated = current.includes(event.value)
         ? current.filter((p) => p !== event.value)
@@ -65,7 +63,7 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
       };
     }
 
-    case 'UPDATE_CONTACTS':
+    case "UPDATE_CONTACTS":
       return {
         ...state,
         formData: {
@@ -77,13 +75,13 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
       };
 
     // ========== Navigation ==========
-    case 'NEXT': {
+    case "NEXT": {
       const nextStep = QUIZ_STEPS[state.currentStep].next;
       if (!nextStep) return state;
-      
+
       // 🔥 CRITICAL: нельзя попасть в success через NEXT
-      if (nextStep === 'success') return state;
-      
+      if (nextStep === "success") return state;
+
       return {
         ...state,
         currentStep: nextStep,
@@ -91,7 +89,7 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
       };
     }
 
-    case 'PREV': {
+    case "PREV": {
       const prevStep = QUIZ_STEPS[state.currentStep].prev;
       if (!prevStep) return state;
       return {
@@ -102,23 +100,23 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
     }
 
     // ========== Submit Flow ==========
-    case 'SUBMIT_REQUEST':
+    case "SUBMIT_REQUEST":
       return {
         ...state,
         isSubmitting: true,
         submitError: undefined,
       };
 
-    case 'SUBMIT_SUCCESS':
+    case "SUBMIT_SUCCESS":
       return {
         ...state,
         isSubmitting: false,
         applicationId: event.applicationId,
-        currentStep: 'success',
+        currentStep: "success",
         submitError: undefined,
       };
 
-    case 'SUBMIT_ERROR':
+    case "SUBMIT_ERROR":
       return {
         ...state,
         isSubmitting: false,
@@ -126,13 +124,13 @@ export function quizReducer(state: QuizState, event: QuizEvent): QuizState {
       };
 
     // ========== Session Restoration ==========
-    case 'RESTORE_DRAFT':
+    case "RESTORE_DRAFT":
       return {
         ...event.state,
         isReturning: false,
       };
 
-    case 'START_FRESH':
+    case "START_FRESH":
       return {
         ...initialState,
       };

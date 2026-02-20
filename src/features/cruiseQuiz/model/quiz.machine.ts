@@ -1,6 +1,6 @@
 /**
  * FSM Types — формализованная State Machine
- * 
+ *
  * Почему это Staff-level:
  * - Impossible states исключены на уровне типов
  * - Все переходы централизованы
@@ -8,16 +8,10 @@
  * - Бизнес-логика = чистая функция
  */
 
-import type { Travelers, Region, DateRange, Priority } from './quiz.domain';
+import type { DateRange, Priority, Region, Travelers } from "./quiz.domain";
 
 // ========== Steps ==========
-export type QuizStep =
-  | 'dates'
-  | 'travelers'
-  | 'region'
-  | 'priorities'
-  | 'contacts'
-  | 'success';
+export type QuizStep = "dates" | "travelers" | "region" | "priorities" | "contacts" | "success";
 
 // ========== Form Data (Domain Types) ==========
 export interface QuizFormData {
@@ -44,15 +38,15 @@ export interface QuizState {
 
 // ========== Events ==========
 export type QuizEvent =
-  | { type: 'SELECT_DATE_RANGE'; value: DateRange }
-  | { type: 'SELECT_TRAVELERS'; value: Travelers }
-  | { type: 'SELECT_REGION'; value: Region }
-  | { type: 'TOGGLE_PRIORITY'; value: Priority }
-  | { type: 'UPDATE_CONTACTS'; name?: string; phone?: string; email?: string }
-  | { type: 'NEXT' }
-  | { type: 'PREV' }
-  | { type: 'SUBMIT_REQUEST' }
-  | { type: 'SUBMIT_SUCCESS'; applicationId: string }
-  | { type: 'SUBMIT_ERROR'; message: string }
-  | { type: 'RESTORE_DRAFT'; state: QuizState }
-  | { type: 'START_FRESH' };
+  | { type: "SELECT_DATE_RANGE"; value: DateRange }
+  | { type: "SELECT_TRAVELERS"; value: Travelers }
+  | { type: "SELECT_REGION"; value: Region }
+  | { type: "TOGGLE_PRIORITY"; value: Priority }
+  | { type: "UPDATE_CONTACTS"; name?: string; phone?: string; email?: string }
+  | { type: "NEXT" }
+  | { type: "PREV" }
+  | { type: "SUBMIT_REQUEST" }
+  | { type: "SUBMIT_SUCCESS"; applicationId: string }
+  | { type: "SUBMIT_ERROR"; message: string }
+  | { type: "RESTORE_DRAFT"; state: QuizState }
+  | { type: "START_FRESH" };

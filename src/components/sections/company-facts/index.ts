@@ -1,1 +1,1 @@
-export { CompanyFactsSection } from './company-facts';
+export { CompanyFactsSection } from "./company-facts";
