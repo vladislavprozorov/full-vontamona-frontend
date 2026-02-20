@@ -6,7 +6,16 @@ import Link from 'next/link';
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
-
+  const observer = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (videoRef.current) {
+      if (entry.isIntersecting) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  })
   useEffect(() => {
     // Оптимизация: приостанавливаем видео когда вкладка неактивна
     const handleVisibilityChange = () => {
@@ -18,11 +27,9 @@ export function Hero() {
         }
       }
     };
-
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    // 🌊 ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит")
-    // 1.0 → 1.04 за 30 секунд, почти незаметно, но мозг чувствует движение
+    // ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит")
+    // 1.0 → 1.04 за 30 секунд
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
@@ -87,7 +94,7 @@ export function Hero() {
                 }}>
               Круизы по всему миру
             </h1>
-            {/* 🎯 Подзаголовок (Apple стиль — легкий, читаемый) */}
+            {/*  Подзаголовок (Apple стиль — легкий, читаемый) */}
             <p className="text-xl sm:text-2xl md:text-3xl text-white font-light max-w-3xl mx-auto"
                style={{ 
                  textShadow: '0 2px 10px rgba(0,0,0,0.6)'
