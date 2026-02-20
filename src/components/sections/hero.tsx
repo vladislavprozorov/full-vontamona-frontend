@@ -6,34 +6,42 @@ import Link from 'next/link';
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const observer = new IntersectionObserver((entries) => {
-    const entry = entries[0];
-    if (videoRef.current) {
-      if (entry.isIntersecting) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  })
+  const sectionRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    // Оптимизация: приостанавливаем видео когда вкладка неактивна
+    const video = videoRef.current;
+    const section = sectionRef.current;
+
+    if (!video || !section) return;
+
     const handleVisibilityChange = () => {
-      if (videoRef.current) {
-        if (document.hidden) {
-          videoRef.current.pause();
-        } else {
-          videoRef.current.play();
-        }
+      if (document.hidden) {
+        video.pause();
+      } else {
+        video.play().catch(() => {});
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    // ЖИВОЙ СИГНАЛ: медленный zoom (море "дышит")
-    // 1.0 → 1.04 за 30 секунд
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
+
+  // IntersectionObserver
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (!entry.isIntersecting) {
+        video.pause();
+      } else if (!document.hidden) {
+        video.play().catch(() => {});
+      }
+    },
+    { threshold: 0.25 }
+  );
+
+  observer.observe(section);
+
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    observer.disconnect();
+  };
+}, []);
 
   const scrollToWidget = () => {
     const el = document.getElementById('widget');
@@ -41,7 +49,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative h-screen min-h-150 overflow-hidden">
+    <section ref={sectionRef} className="relative h-screen min-h-150 overflow-hidden">
       {/* 🎥 VIDEO BACKGROUND (с медленным zoom эффектом) */}
       <div className="absolute inset-0 z-0">
         <video
