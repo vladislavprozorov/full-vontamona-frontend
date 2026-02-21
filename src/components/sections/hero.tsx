@@ -3,46 +3,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useHeroVideo } from "@/features/hero-video/useHeroVideo";
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const sectionRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    const video = videoRef.current;
-    const section = sectionRef.current;
-
-    if (!video || !section) return;
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        video.pause();
-      } else {
-        video.play().catch(() => {});
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // IntersectionObserver
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry.isIntersecting) {
-          video.pause();
-        } else if (!document.hidden) {
-          video.play().catch(() => {});
-        }
-      },
-      { threshold: 0.25 },
-    );
-
-    observer.observe(section);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      observer.disconnect();
-    };
-  }, []);
-
+  const sectionRef = useRef<HTMLElement>(null);
+  useHeroVideo({ videoRef, sectionRef });
   const scrollToWidget = () => {
     const el = document.getElementById("widget");
     el?.scrollIntoView({ behavior: "smooth" });
