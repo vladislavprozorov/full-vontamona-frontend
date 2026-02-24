@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { HeroVideo } from "@/features/hero-video";
+import { HeroVideo, HeroVideoFallback } from "@/features/hero-video";
+import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -13,8 +14,10 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} className="relative h-screen min-h-150 overflow-hidden">
-      {/* 🎥 Видео-фон — вся логика инкапсулирована в фиче */}
-      <HeroVideo sectionRef={sectionRef} />
+      {/* Видео-фон — вся логика инкапсулирована в фиче */}
+      <ErrorBoundary fallback={<HeroVideoFallback />}>
+        <HeroVideo sectionRef={sectionRef} />
+      </ErrorBoundary>
 
       {/* 📝 CONTENT */}
       <div className="relative z-10 flex h-full items-center">
