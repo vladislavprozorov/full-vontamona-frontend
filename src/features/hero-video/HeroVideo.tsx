@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
+import { HERO_POSTER_URL, HERO_VIDEO_URL } from "./constants";
 import { useHeroVideo } from "./useHeroVideo";
 
 interface HeroVideoProps {
@@ -19,7 +20,7 @@ export function HeroVideo({ sectionRef }: HeroVideoProps) {
       {/* Poster — показывается всегда, сразу, без задержки */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/video/hero-poster.jpg')" }}
+        style={{ backgroundImage: `url(${HERO_POSTER_URL})` }}
       />
 
       {/* Видео — только на десктопе поверх постера */}
@@ -34,7 +35,7 @@ export function HeroVideo({ sectionRef }: HeroVideoProps) {
           preload="metadata"
           style={{ animation: "slowZoom 30s ease-in-out infinite alternate" }}
         >
-          <source src="/video/hero-trim.mp4" type="video/mp4" />
+          <source src={HERO_VIDEO_URL} type="video/mp4" />
         </video>
       )}
 
