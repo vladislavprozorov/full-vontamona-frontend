@@ -5,6 +5,7 @@ import { BenefitsSection } from "@/components/sections/benefits";
 import { Hero } from "@/components/sections/hero";
 import { Button } from "@/components/ui/button";
 import { SectionDivider } from "@/components/ui/section-divider";
+import { CruiseDestinationsSection } from "@/features/cruiseDestinations";
 
 export default function HomePage() {
   return (
@@ -15,6 +16,9 @@ export default function HomePage() {
       <main>
         {/* HERO */}
         <Hero />
+
+        {/* CRUISE DESTINATIONS - Новые направления */}
+        <CruiseDestinationsSection />
 
         {/* BENEFITS - Почему мы?
         <BenefitsSection /> */}
