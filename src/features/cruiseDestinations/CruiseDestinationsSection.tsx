@@ -1,85 +1,52 @@
 "use client";
 
 import Image from "next/image";
-import type { CruiseDestination } from "./cruise-destinations.data";
 import { CRUISE_DESTINATIONS } from "./cruise-destinations.data";
 
-interface CruiseDestinationsSectionProps {
-  className?: string;
-}
-
-export function CruiseDestinationsSection({ className }: CruiseDestinationsSectionProps) {
-  const handleDestinationClick = (destination: CruiseDestination) => {
-    console.log("Selected cruise destination:", destination.slug);
-    // TODO: Navigate to destination page or open modal
-  };
-
+export function CruiseDestinationsSection() {
   return (
-    <section className={`relative mx-auto max-w-7xl px-4 py-12 ${className || ""}`}>
-      {/* Rounded container with background image */}
-      <div className="relative overflow-hidden rounded-3xl min-h-100 flex items-center justify-center">
-        {/* Next.js optimized background image */}
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <div className="relative overflow-hidden rounded-[32px] h-[480px] flex items-center justify-center">
+        {/* Фон с лёгким zoom для “дорогого” кадра */}
         <Image
-          src="/images/section-image.jpg"
-          alt="Круизные направления"
+          src="/images/section.jpg"
+          alt="Морские круизы"
           fill
-          quality={80}
-          priority
-          className="object-cover"
+          quality={90}
+          className="object-cover scale-[1.05]"
         />
 
-        {/* Overlay - градиент слева направо для лучшей читаемости */}
-        <div
-          className="absolute inset-0 z-1"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(10,20,40,0.75) 0%, rgba(10,20,40,0.45) 40%, rgba(10,20,40,0.15) 70%, rgba(0,0,0,0.05) 100%)",
-          }}
-        />
+        {/* Глубокий кинематографичный overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(10,20,40,0.45)] via-[rgba(10,20,40,0.6)] to-[rgba(10,20,40,0.75)]" />
 
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 py-12 max-w-4xl">
-          {/* Badges - стеклянный эффект */}
-          <div className="flex gap-3 justify-center mb-6">
-            <span
-              className="inline-block px-4 py-1.5 text-orange-600 text-sm font-medium rounded-full border border-white/30"
-              style={{
-                backdropFilter: "blur(8px)",
-                background: "rgba(255,255,255,0.9)",
-              }}
-            >
+        {/* Мягкий световой акцент сверху (едва заметный luxury-штрих) */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
+
+        <div className="relative z-10 text-center max-w-3xl px-6">
+          {/* Минимал бейджи */}
+          <div className="flex justify-center gap-3 mb-8">
+            <span className="px-4 py-1.5 text-[11px] tracking-[0.2em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
               Новинка
             </span>
-            <span
-              className="inline-block px-4 py-1.5 text-white text-sm font-medium rounded-full border border-white/30"
-              style={{
-                backdropFilter: "blur(8px)",
-                background: "rgba(255,255,255,0.15)",
-              }}
-            >
+            <span className="px-4 py-1.5 text-[11px] tracking-[0.2em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
               Морские круизы
             </span>
           </div>
 
-          {/* Heading - более премиальный заголовок */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-5xl font-semibold text-white leading-tight mb-6">
             Откройте мир морских круизов
           </h2>
 
-          {/* Description */}
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Путешествуйте по морям с комфортом 5★
-            <br />
+          <p className="text-lg md:text-xl text-white/75 font-light mb-10">
+            Путешествуйте по морям с комфортом 5★ <br />
             Незабываемые впечатления и премиальный сервис
           </p>
 
-          {/* Destination buttons */}
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex flex-wrap justify-center gap-4">
             {CRUISE_DESTINATIONS.map((destination) => (
               <button
                 key={destination.id}
-                onClick={() => handleDestinationClick(destination)}
-                className="px-6 py-3 bg-white hover:bg-white/90 text-blue-600 font-medium rounded-full transition-all duration-200 hover:scale-105 shadow-lg"
+                className="px-8 py-3 rounded-full bg-white/95 text-slate-900 text-sm font-medium tracking-wide transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-lg"
               >
                 {destination.name}
               </button>
