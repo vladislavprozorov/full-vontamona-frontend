@@ -41,5 +41,5 @@ export function useHeroVideo({ videoRef, sectionRef, enabled = true }: UseHeroVi
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       observer.disconnect();
     };
-  }, [videoRef, sectionRef]);
+  }, [videoRef, sectionRef, enabled]);
 }
