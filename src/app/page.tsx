@@ -5,7 +5,7 @@ import { BenefitsSection } from "@/components/sections/benefits";
 import { Hero } from "@/components/sections/hero";
 import { Button } from "@/components/ui/button";
 import { SectionDivider } from "@/components/ui/section-divider";
-import { CruiseDestinationsSection } from "@/features/cruiseDestinations";
+import { CruiseDestinationsSection } from "@/features/cruise-destinations";
 
 export default function HomePage() {
   return (
