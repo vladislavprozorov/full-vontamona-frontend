@@ -13,7 +13,7 @@ export function CruiseDestinationsSection() {
           alt="Морские круизы"
           fill
           quality={90}
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 1280px"
+          sizes="(max-width: 768px) 100vw, 1280px"
           className="object-cover scale-[1.05]"
         />
 
@@ -26,10 +26,10 @@ export function CruiseDestinationsSection() {
         <div className="relative z-10 text-center w-full max-w-3xl px-4 sm:px-6 py-10 sm:py-0">
           {/* Минимал бейджи */}
           <div className="flex justify-center gap-2 sm:gap-3 mb-5 sm:mb-8">
-            <span className="px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-[11px] tracking-[0.18em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
+            <span className="px-3 sm:px-4 py-1 sm:py-1.5 text-[11px] tracking-[0.18em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
               Новинка
             </span>
-            <span className="px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-[11px] tracking-[0.18em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
+            <span className="px-3 sm:px-4 py-1 sm:py-1.5 text-[11px] tracking-[0.18em] uppercase rounded-full bg-white/10 backdrop-blur-lg text-white/80 border border-white/20">
               Морские круизы
             </span>
           </div>
@@ -43,7 +43,7 @@ export function CruiseDestinationsSection() {
           </p>
 
           {/* Кнопки: 2 колонки на мобилке, flex wrap на sm+ */}
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 sm:gap-4">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2.5 sm:gap-4 [&>*:last-child:nth-child(odd)]:col-span-2">
             {CRUISE_DESTINATIONS.map((destination) => (
               <button
                 key={destination.id}
