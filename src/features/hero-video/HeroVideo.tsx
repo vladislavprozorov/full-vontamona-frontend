@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { HERO_POSTER_URL, HERO_VIDEO_URL } from "./constants";
@@ -18,11 +19,7 @@ export function HeroVideo({ sectionRef }: HeroVideoProps) {
   return (
     <div className="absolute inset-0 z-0">
       {/* Poster — показывается всегда, сразу, без задержки */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${HERO_POSTER_URL})` }}
-      />
-
+      <Image src={HERO_POSTER_URL} alt="" fill priority sizes="100vw" className="object-cover" />
       {/* Видео — только на десктопе поверх постера */}
       {!isMobile && (
         <video
