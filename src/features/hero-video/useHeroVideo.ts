@@ -3,10 +3,12 @@ import { RefObject, useEffect } from "react";
 interface UseHeroVideoOptions {
   videoRef: RefObject<HTMLVideoElement | null>;
   sectionRef: RefObject<HTMLElement | null>;
+  enabled?: boolean;
 }
 
-export function useHeroVideo({ videoRef, sectionRef }: UseHeroVideoOptions) {
+export function useHeroVideo({ videoRef, sectionRef, enabled = true }: UseHeroVideoOptions) {
   useEffect(() => {
+    if (!enabled) return;
     const video = videoRef.current;
     const section = sectionRef.current;
 
