@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { useHeroVideo } from "./useHeroVideo";
 
 interface HeroVideoProps {
@@ -9,30 +10,36 @@ interface HeroVideoProps {
 
 export function HeroVideo({ sectionRef }: HeroVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  useHeroVideo({ videoRef, sectionRef });
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  useHeroVideo({ videoRef, sectionRef, enabled: !isMobile });
 
   return (
     <div className="absolute inset-0 z-0">
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster="/video/hero-poster.jpg"
-        className="h-full w-full object-cover"
-        preload="metadata"
-        style={{
-          animation: "slowZoom 30s ease-in-out infinite alternate",
-        }}
-      >
-        <source src="/video/hero-trim.mp4" type="video/mp4" />
-      </video>
+      {/* Poster — показывается всегда, сразу, без задержки */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/video/hero-poster.jpg')" }}
+      />
 
-      {/* Линейный оверлей */}
+      {/* Видео — только на десктопе поверх постера */}
+      {!isMobile && (
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+          preload="metadata"
+          style={{ animation: "slowZoom 30s ease-in-out infinite alternate" }}
+        >
+          <source src="/video/hero-trim.mp4" type="video/mp4" />
+        </video>
+      )}
+
+      {/* Оверлеи */}
       <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/45 to-black/70" />
-
-      {/* Радиальный градиент под текст */}
       <div
         className="absolute inset-0"
         style={{
