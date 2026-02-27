@@ -6,6 +6,7 @@ import { Hero } from "@/components/sections/hero";
 import { Button } from "@/components/ui/button";
 import { SectionDivider } from "@/components/ui/section-divider";
 import { CruiseDestinationsSection } from "@/features/cruise-destinations";
+import { DestinationsGrid } from "@/features/destinations";
 
 export default function HomePage() {
   return (
@@ -16,7 +17,8 @@ export default function HomePage() {
       <main>
         {/* HERO */}
         <Hero />
-
+        {/* DESTINATIONS GRID - Популярные направления */}
+        <DestinationsGrid />
         {/* CRUISE DESTINATIONS - Новые направления */}
         <CruiseDestinationsSection />
 
