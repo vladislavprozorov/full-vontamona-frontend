@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { type ContactsFormData, contactsSchema } from "@/features/cruiseQuiz/model";
+import { type ContactsFormData, contactsSchema } from "@/features/cruise-quiz/model";
 
 export function FooterContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);

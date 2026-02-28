@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { QuizForm } from "@/features/cruiseQuiz/quiz-form";
+import { QuizForm } from "@/features/cruise-quiz/quiz-form";
 
 export const metadata: Metadata = {
   title: "Подбор круиза | Круизы",
