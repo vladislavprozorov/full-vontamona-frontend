@@ -72,7 +72,7 @@ export function Hero() {
           <div className="flex flex-col items-center gap-6 animate-fade-in-delay">
             <Link
               href="/quiz"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full px-16 py-8 text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full w-full sm:w-auto px-8 sm:px-16 py-5 sm:py-8 text-lg sm:text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
               style={{
                 background: "rgba(255,255,255,0.95)",
                 color: "#0f172a",
