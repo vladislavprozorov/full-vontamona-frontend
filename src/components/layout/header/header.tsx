@@ -1,62 +1,46 @@
-"use client";
-
+import { User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { headerTokens } from "@/design-system/tokens/header";
-import type { HeaderProps, HeaderState } from "./header.types";
-import { HeaderActions } from "./header-actions";
-import { HeaderNav } from "./header-nav";
+import { SidebarMenu } from "@/features/navigation";
+import type { HeaderProps } from "./header.types";
+import { HeaderClientWrapper } from "./header-client-wrapper";
 
 export function Header({ variant = "solid", className }: HeaderProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // ✅ Разделяем variant (тип) и state (состояние)
-  const state: HeaderState = isScrolled ? "scrolled" : "default";
-  const styles = headerTokens.variants[variant][state];
+  const iconClass =
+    "h-5 w-5 transition-colors duration-300 group-data-[scrolled=true]:text-neutral-900";
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${className || ""}`}
-      style={{
-        height: headerTokens.height[state],
-        background: styles.background,
-        borderBottom: `1px solid ${styles.border}`,
-        color: styles.textColor,
-        backdropFilter: styles.backdropFilter,
-        boxShadow: styles.boxShadow,
-      }}
-    >
-      <div
-        className="mx-auto flex items-center justify-between px-4 transition-all duration-300"
-        style={{
-          height: "100%",
-          maxWidth: "1280px",
-        }}
-      >
-        {/* LOGO */}
-        <Link
-          href="/"
-          className="font-semibold transition-all duration-300"
-          style={{
-            fontSize: isScrolled ? "1rem" : "1.125rem",
-          }}
-        >
+    <HeaderClientWrapper variant={variant} className={className}>
+      {/* Левая часть: Гамбургер */}
+      <div className="flex w-24 items-center">
+        <SidebarMenu className={iconClass} variant={variant} />
+      </div>
+
+      {/* Центр: Логотип */}
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+          {/* <Image
+            src="/logo/logo.svg" 
+            alt="MSC Logo"
+            width={120}
+            height={40}
+            className="h-10 w-auto group-data-[scrolled=true]:invert group-data-[scrolled=true]:brightness-0"
+            
+          /> */}
           Vontamona
         </Link>
-
-        {/* ✅ Передаём variant и state дочерним компонентам */}
-        <HeaderNav variant={variant} state={state} />
-        <HeaderActions variant={variant} state={state} />
       </div>
-    </header>
+
+      {/* Правая часть: Действия */}
+      {/* <div className="flex w-24 items-center justify-end gap-4">
+        <Link
+          href="/login"
+          className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-black/10 hover:text-white ${iconClass}`}
+          aria-label="Личный кабинет"
+        >
+          <User className="h-5 w-5" />
+        </Link>
+      </div> */}
+    </HeaderClientWrapper>
   );
 }
