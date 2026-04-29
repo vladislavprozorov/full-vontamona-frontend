@@ -21,14 +21,14 @@ export default function HomePage() {
         {/* DESTINATIONS GRID - Популярные направления */}
         <DestinationsGrid />
         {/* CRUISE DESTINATIONS - Новые направления */}
-        <CruiseDestinationsSection />
 
-        <section
+        {/* <section
           className="py-12 md:py-20 lg:py-36"
           style={{ backgroundColor: "var(--section-background)" }}
         >
           <CruiseCarousel />
-        </section>
+        </section> */}
+        <CruiseDestinationsSection />
         {/* DIVIDER */}
         <SectionDivider />
 

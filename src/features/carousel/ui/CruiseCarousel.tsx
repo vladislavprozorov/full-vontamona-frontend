@@ -12,7 +12,7 @@ const cruises = [
     label: "Популярное направление",
     title: "Средиземное море.",
     description: "Италия, Греция, Испания — солнце, история и гастрономия.",
-    image: "/carousel/cruise-ship.png",
+    image: "/carousel/cruiseprem.png",
   },
   {
     label: "Экзотика",
@@ -42,7 +42,7 @@ const cruises = [
 
 export function CruiseCarousel() {
   return (
-    <div className="w-full bg-[#f5f5f7] py-16 md:py-24">
+    <div className="w-full bg-[#f5f5f7]">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12">
         <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <h2 className="text-4xl md:text-[56px] font-semibold text-[#1d1d1f] tracking-tight leading-tight max-w-3xl">
