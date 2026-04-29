@@ -1,0 +1,8 @@
+vontamona.ru {
+	encode zstd gzip
+	reverse_proxy frontend:3000
+}
+
+www.vontamona.ru {
+	redir https://vontamona.ru{uri} permanent
+}
