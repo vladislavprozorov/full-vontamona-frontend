@@ -9,7 +9,7 @@ function FeaturedCard({ destination }: { destination: Destination }) {
   return (
     <article className="relative rounded-2xl overflow-hidden bg-slate-900 row-span-2">
       <Link
-        href={`/destinations/${destination.slug}`}
+        href={destination.href ?? `/destinations/${destination.slug}`}
         className="group block h-full"
         aria-label={`${destination.name} — ${destination.description}`}
       >
@@ -57,7 +57,7 @@ function SmallCard({ destination }: { destination: Destination }) {
   return (
     <article className="relative rounded-2xl overflow-hidden bg-slate-900">
       <Link
-        href={`/destinations/${destination.slug}`}
+        href={destination.href ?? `/destinations/${destination.slug}`}
         className="group block"
         aria-label={`${destination.name} — ${destination.description}`}
       >

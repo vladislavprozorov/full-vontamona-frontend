@@ -19,6 +19,23 @@ export function SidebarMenu({ className, variant }: SidebarMenuProps) {
     setMounted(true);
   }, []);
 
+  const novelties = [
+    {
+      href: "/cruises/msc-world-asia",
+      imageUrl: "https://img.pac.ru/cruise/ships_gallery/World_Asia/01.jpg",
+      imageAlt: "MSC World Asia",
+      title: "MSC World Asia",
+      subtitle: "Средиземное море 2026",
+    },
+    {
+      href: "/cruises/msc-bellissima-asia",
+      imageUrl: "/images/destinations/asia.jpg",
+      imageAlt: "MSC Bellissima — Китай, Корея и Япония",
+      title: "MSC Bellissima",
+      subtitle: "Китай · Корея · Япония",
+    },
+  ] as const;
+
   const drawerContent = (
     <>
       {isOpen && (
@@ -73,27 +90,32 @@ export function SidebarMenu({ className, variant }: SidebarMenuProps) {
             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-5">
               Новинки
             </h3>
-            <Link
-              href="/cruises/msc-world-asia"
-              onClick={() => setIsOpen(false)}
-              className="group block relative rounded-xl overflow-hidden bg-gray-100 aspect-[4/3] flex items-end p-4"
-            >
-              <Image
-                src="https://img.pac.ru/cruise/ships_gallery/World_Asia/01.jpg"
-                alt="MSC World Asia"
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="relative z-10">
-                <span className="bg-white text-black text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full mb-2 inline-block">
-                  NEW
-                </span>
-                <p className="text-white font-semibold text-lg">MSC World Asia</p>
-                <p className="text-white/80 text-sm">Средиземное море 2026</p>
-              </div>
-            </Link>
+            <div className="grid gap-4">
+              {novelties.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="group block relative rounded-xl overflow-hidden bg-gray-100 aspect-[4/3] flex items-end p-4"
+                >
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.imageAlt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="relative z-10">
+                    <span className="bg-white text-black text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full mb-2 inline-block">
+                      NEW
+                    </span>
+                    <p className="text-white font-semibold text-lg">{item.title}</p>
+                    <p className="text-white/80 text-sm">{item.subtitle}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="mt-auto pt-6 h-px w-full bg-transparent" />
