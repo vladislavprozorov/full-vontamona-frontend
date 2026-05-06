@@ -6,7 +6,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    qualities: [75, 90],
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);
