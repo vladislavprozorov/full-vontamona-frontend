@@ -2,8 +2,8 @@ import { Header } from "@/components/layout/header/header";
 import { LazyPacWidget } from "@/components/lazy-pac-widget";
 import { Hero } from "@/components/sections/hero";
 import { SectionDivider } from "@/components/ui/section-divider";
-import { CruiseNoveltiesSection } from "@/features/cruise-detail/ui/cruise-novelties-section";
 import { CruiseDestinationsSection } from "@/features/cruise-destinations";
+import { CruiseNoveltiesSection } from "@/features/cruise-detail/ui/cruise-novelties-section";
 import { DestinationsGrid } from "@/features/destinations";
 
 export default function HomePage() {
