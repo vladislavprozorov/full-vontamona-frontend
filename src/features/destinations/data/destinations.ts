@@ -9,6 +9,7 @@ export const DESTINATIONS: readonly Destination[] = [
     image: "/images/destinations/mediterranean.jpg",
     featured: true,
     cruisesCount: 48,
+    href: "/cruises/msc-world-asia",
   },
   {
     id: 2,
@@ -45,5 +46,6 @@ export const DESTINATIONS: readonly Destination[] = [
     image: "/images/destinations/asia.jpg",
     featured: false,
     cruisesCount: 21,
+    href: "/cruises/msc-bellissima-asia",
   },
 ] as const;

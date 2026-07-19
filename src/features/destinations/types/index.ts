@@ -6,4 +6,5 @@ export interface Destination {
   image: string;
   featured: boolean;
   cruisesCount: number;
+  href?: string;
 }

@@ -1,12 +1,9 @@
-import Link from "next/link";
 import { Header } from "@/components/layout/header/header";
 import { LazyPacWidget } from "@/components/lazy-pac-widget";
-import { BenefitsSection } from "@/components/sections/benefits";
 import { Hero } from "@/components/sections/hero";
-import { Button } from "@/components/ui/button";
 import { SectionDivider } from "@/components/ui/section-divider";
-import { CruiseCarousel } from "@/features/carousel";
 import { CruiseDestinationsSection } from "@/features/cruise-destinations";
+import { CruiseNoveltiesSection } from "@/features/cruise-detail/ui/cruise-novelties-section";
 import { DestinationsGrid } from "@/features/destinations";
 
 export default function HomePage() {
@@ -18,9 +15,11 @@ export default function HomePage() {
       <main>
         {/* HERO */}
         <Hero />
+
+        <CruiseNoveltiesSection />
+
         {/* DESTINATIONS GRID - Популярные направления */}
         <DestinationsGrid />
-        {/* CRUISE DESTINATIONS - Новые направления */}
 
         {/* <section
           className="py-12 md:py-20 lg:py-36"
@@ -29,7 +28,10 @@ export default function HomePage() {
           <CruiseCarousel />
         </section> */}
 
+        {/* CRUISE DESTINATIONS - Новые направления */}
+
         <CruiseDestinationsSection />
+
         {/* DIVIDER */}
         <SectionDivider />
 
