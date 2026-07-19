@@ -96,7 +96,7 @@ export function ContactsStep({
         <input
           type="email"
           {...register("email")}
-          placeholder="your@email.com"
+          placeholder="Ваша почта, например example@mail.ru"
           className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 rounded-xl focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
         />
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}

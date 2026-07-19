@@ -28,6 +28,7 @@ export default function HomePage() {
         >
           <CruiseCarousel />
         </section> */}
+
         <CruiseDestinationsSection />
         {/* DIVIDER */}
         <SectionDivider />
