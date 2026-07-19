@@ -25,7 +25,7 @@ export const TravelersStep = memo(function TravelersStep({
       <div className="grid gap-2.5 md:gap-2">
         {TRAVELERS_OPTIONS.map((option) => {
           const isSelected = selectedValue === option.value;
-          const isSelecting = selectingValue === option.value; // 🔥 Было option.label
+          const isSelecting = selectingValue === option.value;
           return (
             <button
               key={option.value}

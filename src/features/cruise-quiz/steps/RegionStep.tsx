@@ -25,7 +25,7 @@ export const RegionStep = memo(function RegionStep({
       <div className="grid gap-2.5 md:gap-3 md:grid-cols-2">
         {REGION_OPTIONS.map((option) => {
           const isSelected = selectedValue === option.value;
-          const isSelecting = selectingValue === option.value; // 🔥 Было неправильное сравнение
+          const isSelecting = selectingValue === option.value;
           return (
             <button
               key={option.value}

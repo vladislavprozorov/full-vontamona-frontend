@@ -158,17 +158,21 @@ ${data.priorities.length > 0 ? `⭐ Приоритеты: ${data.priorities.join
   }
 }
 
-// 📧 Отправка на Email (с автоответом клиенту)
+// 📧 Отправка на Email через SMTP (с автоответом клиенту)
 async function sendToEmail(
   data: QuizData,
   scoring: ReturnType<typeof calculateScore>,
   applicationId: string,
 ) {
-  const { Resend } = await import("resend");
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const nodemailer = (await import("nodemailer")).default;
 
-  const EMAIL_TO = process.env.EMAIL_TO || "info@vontamona.com";
-  const EMAIL_FROM = process.env.EMAIL_FROM || "onboarding@resend.dev";
+  const SMTP_HOST = process.env.SMTP_HOST;
+  const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
+  const SMTP_USER = process.env.SMTP_USER;
+  const SMTP_PASS = process.env.SMTP_PASS;
+
+  const EMAIL_TO = process.env.EMAIL_TO || SMTP_USER || "info@vontamona.com";
+  const EMAIL_FROM = process.env.EMAIL_FROM || SMTP_USER || "";
   const insights = getInsights(data);
 
   // 1️⃣ Email менеджеру
@@ -202,84 +206,139 @@ async function sendToEmail(
     ${insights.length > 0 ? `<h3>💡 Инсайты</h3><ul>${insights.map((i) => `<li>${i}</li>`).join("")}</ul>` : ""}
   `;
 
+  // Краткое резюме ответов клиента для письма
+  const summaryRows = [
+    ["🗓 Сроки", data.dates],
+    ["👥 Путешествуют", data.travelers],
+    ["🌍 Регион", data.region],
+    ["⭐ Приоритеты", data.priorities.length > 0 ? data.priorities.join(", ") : ""],
+  ]
+    .filter(([, v]) => v)
+    .map(
+      ([label, value]) => `
+        <tr>
+          <td style="padding: 6px 0; color: #737373; font-size: 14px; white-space: nowrap; vertical-align: top;">${label}</td>
+          <td style="padding: 6px 0 6px 16px; color: #171717; font-size: 14px;">${value}</td>
+        </tr>`,
+    )
+    .join("");
+
   // 2️⃣ Автоответ клиенту
   const clientEmailBody = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
-      <h2 style="color: #171717; font-size: 24px; font-weight: 500; margin-bottom: 16px;">
-        Здравствуйте, ${data.name}!
-      </h2>
-      
-      <p style="margin-bottom: 16px; line-height: 1.6;">
-        Благодарим вас за обращение — мы получили вашу заявку на подбор круиза.
-      </p>
-      
-      <div style="background: #f5f5f5; padding: 20px; border-radius: 12px; margin: 24px 0;">
-        <p style="margin: 0; color: #737373; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-          Номер вашей заявки
-        </p>
-        <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 16px; font-weight: 600; color: #171717;">
-          ${applicationId}
-        </p>
-      </div>
-      
-      <p style="margin-bottom: 16px; line-height: 1.6;">
-        Наш эксперт уже приступил к подбору маршрутов и лайнеров с учётом ваших пожеланий.<br>
-        Мы подбираем круизы вручную, не по шаблону, поэтому уделяем внимание деталям.
-      </p>
-      
-      <p style="font-weight: 500; margin-top: 24px; margin-bottom: 12px;">Что будет дальше:</p>
-      <ul style="line-height: 1.8; padding-left: 20px; color: #404040;">
-        <li>в течение 2–3 часов с вами свяжется персональный консультант</li>
-        <li>мы предложим оптимальные варианты по датам, маршрутам и уровню сервиса</li>
-        <li>при необходимости уточним детали, чтобы сделать подбор максимально точным</li>
-      </ul>
-      
-      <p style="margin-top: 24px; line-height: 1.6; color: #525252;">
-        Если у вас появятся вопросы или вы захотите дополнить заявку, просто ответьте на это письмо, 
-        указав номер заявки — мы будем рады помочь.
-      </p>
-      
-      <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e5e5;">
-      
-      <p style="color: #737373; font-size: 14px; line-height: 1.6; margin: 0;">
-        С уважением,<br>
-        <strong style="color: #171717;">Команда VonTamona</strong><br>
-        Персональный подбор круизов
-      </p>
-    </div>
+  <div style="background: #f0f0f0; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 560px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e5e5e5;">
+      <!-- Шапка -->
+      <tr>
+        <td style="background: #171717; padding: 32px 40px; text-align: center;">
+          <div style="color: #ffffff; font-size: 22px; font-weight: 600; letter-spacing: 0.5px;">Вонтамона</div>
+          <div style="color: #a3a3a3; font-size: 13px; margin-top: 4px;">Персональный подбор круизов</div>
+        </td>
+      </tr>
+      <!-- Тело -->
+      <tr>
+        <td style="padding: 36px 40px;">
+          <h1 style="margin: 0 0 16px; color: #171717; font-size: 22px; font-weight: 600;">
+            Здравствуйте, ${data.name}!
+          </h1>
+          <p style="margin: 0 0 20px; color: #404040; font-size: 15px; line-height: 1.6;">
+            Спасибо за заявку - мы получили её и уже приступили к подбору круиза
+            специально для вас. Мы подбираем маршруты вручную, не по шаблону,
+            поэтому уделяем внимание деталям.
+          </p>
+
+          <!-- Номер заявки -->
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background: #f5f5f5; border-radius: 12px; margin: 0 0 24px;">
+            <tr>
+              <td style="padding: 18px 20px;">
+                <div style="color: #737373; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;">Номер вашей заявки</div>
+                <div style="font-family: 'Courier New', monospace; font-size: 17px; font-weight: 700; color: #171717;">${applicationId}</div>
+              </td>
+            </tr>
+          </table>
+
+          ${
+            summaryRows
+              ? `<div style="color: #171717; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Ваша заявка:</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 0 0 24px;">${summaryRows}</table>`
+              : ""
+          }
+
+          <!-- Что дальше -->
+          <div style="color: #171717; font-size: 14px; font-weight: 600; margin-bottom: 10px;">Что будет дальше:</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 0 0 24px;">
+            <tr><td style="padding: 4px 0; color: #404040; font-size: 14px; line-height: 1.6;">✓&nbsp;&nbsp;в течение 2–3 часов с вами свяжется персональный консультант</td></tr>
+            <tr><td style="padding: 4px 0; color: #404040; font-size: 14px; line-height: 1.6;">✓&nbsp;&nbsp;предложим оптимальные варианты по датам, маршрутам и уровню сервиса</td></tr>
+            <tr><td style="padding: 4px 0; color: #404040; font-size: 14px; line-height: 1.6;">✓&nbsp;&nbsp;при необходимости уточним детали для максимально точного подбора</td></tr>
+          </table>
+
+          <p style="margin: 0; color: #525252; font-size: 14px; line-height: 1.6;">
+            Появились вопросы или хотите дополнить заявку? Просто ответьте на это
+            письмо, указав номер заявки — будем рады помочь.
+          </p>
+        </td>
+      </tr>
+      <!-- Подвал -->
+      <tr>
+        <td style="padding: 24px 40px; border-top: 1px solid #e5e5e5;">
+          <p style="margin: 0; color: #737373; font-size: 13px; line-height: 1.6;">
+            С уважением,<br>
+            <strong style="color: #171717;">Команда Вонтамона</strong><br>
+            Персональный подбор круизов
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
   `;
 
+  // Проверяем, что SMTP настроен
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+    console.warn("⚠️ SMTP credentials not configured (SMTP_HOST / SMTP_USER / SMTP_PASS)");
+    console.log("📧 Manager email would be sent to:", EMAIL_TO);
+    if (data.email) {
+      console.log("📧 Client email would be sent to:", data.email);
+    }
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465, // true для 465 (SSL), false для 587 (STARTTLS)
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+    // ⏱ Таймауты — чтобы запрос не висел вечно, если порт недоступен
+    connectionTimeout: 10000, // 10с на установку TCP-соединения
+    greetingTimeout: 10000, // 10с на приветствие сервера
+    socketTimeout: 15000, // 15с на неактивность сокета
+  });
+
   try {
-    // Отправка менеджеру
-    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_YOUR_API_KEY_HERE") {
-      await resend.emails.send({
+    // 1️⃣ Отправка менеджеру
+    await transporter.sendMail({
+      from: EMAIL_FROM,
+      to: EMAIL_TO,
+      replyTo: data.email || undefined,
+      subject: `${scoring.emoji} ${scoring.priority} лид: ${data.name} (${applicationId})`,
+      html: managerEmailBody,
+    });
+    console.log("✅ Manager email sent successfully to:", EMAIL_TO);
+
+    // 2️⃣ Автоответ клиенту
+    if (data.email) {
+      await transporter.sendMail({
         from: EMAIL_FROM,
-        to: EMAIL_TO,
-        subject: `${scoring.emoji} ${scoring.priority} лид: ${data.name} (${applicationId})`,
-        html: managerEmailBody,
+        to: data.email,
+        subject: `Ваша заявка №${applicationId} принята — подбираем круизы!`,
+        html: clientEmailBody,
       });
-
-      // Автоответ клиенту
-      if (data.email) {
-        await resend.emails.send({
-          from: EMAIL_FROM,
-          to: data.email,
-          subject: `Ваша заявка №${applicationId} принята — подбираем круизы!`,
-          html: clientEmailBody,
-        });
-        console.log("✅ Client auto-reply sent to:", data.email);
-      }
-
-      console.log("✅ Manager email sent successfully");
-    } else {
-      console.log("⚠️ Resend API key not configured");
-      console.log("📧 Manager email preview:", EMAIL_TO);
-      if (data.email) {
-        console.log("📧 Client email would be sent to:", data.email);
-      }
+      console.log("✅ Client auto-reply sent to:", data.email);
     }
   } catch (error) {
     console.error("❌ Failed to send email:", error);
+    throw error; // пробрасываем, чтобы POST-обработчик залогировал
   }
 }
 
@@ -305,22 +364,24 @@ export async function POST(request: NextRequest) {
       scoring: `${scoring.emoji} ${scoring.priority} (${scoring.score}/9)`,
     });
 
-    // 🚀 КРИТИЧНО: Отправляем уведомления СИНХРОННО (await)
-    // Иначе Vercel может прервать execution до отправки в Telegram
-    try {
-      await sendToTelegram(data, scoring, applicationId);
-      console.log("✅ Telegram notification sent");
-    } catch (error) {
-      console.error("❌ Telegram error:", error);
-      // Продолжаем даже если Telegram упал
+    // 📧 Email — приоритетный канал, 📱 Telegram — дополнительный.
+    // Отправляем ПАРАЛЛЕЛЬНО и НЕЗАВИСИМО: падение одного не влияет на другой,
+    // а общее ожидание = дольшему из двух, а не их сумме (кнопка не висит).
+    const [emailResult, telegramResult] = await Promise.allSettled([
+      sendToEmail(data, scoring, applicationId),
+      sendToTelegram(data, scoring, applicationId),
+    ]);
+
+    if (emailResult.status === "fulfilled") {
+      console.log("✅ Email notification sent");
+    } else {
+      console.error("❌ Email error:", emailResult.reason);
     }
 
-    try {
-      await sendToEmail(data, scoring, applicationId);
-      console.log("✅ Email notification sent");
-    } catch (error) {
-      console.error("❌ Email error:", error);
-      // Продолжаем даже если Email упал
+    if (telegramResult.status === "fulfilled") {
+      console.log("✅ Telegram notification sent");
+    } else {
+      console.error("❌ Telegram error:", telegramResult.reason);
     }
 
     // Возвращаем успех после отправки уведомлений
