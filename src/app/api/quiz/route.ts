@@ -364,22 +364,24 @@ export async function POST(request: NextRequest) {
       scoring: `${scoring.emoji} ${scoring.priority} (${scoring.score}/9)`,
     });
 
-    // 🚀 КРИТИЧНО: Отправляем уведомления СИНХРОННО (await)
-    // Иначе Vercel может прервать execution до отправки в Telegram
-    try {
-      await sendToTelegram(data, scoring, applicationId);
-      console.log("✅ Telegram notification sent");
-    } catch (error) {
-      console.error("❌ Telegram error:", error);
-      // Продолжаем даже если Telegram упал
+    // 📧 Email — приоритетный канал, 📱 Telegram — дополнительный.
+    // Отправляем ПАРАЛЛЕЛЬНО и НЕЗАВИСИМО: падение одного не влияет на другой,
+    // а общее ожидание = дольшему из двух, а не их сумме (кнопка не висит).
+    const [emailResult, telegramResult] = await Promise.allSettled([
+      sendToEmail(data, scoring, applicationId),
+      sendToTelegram(data, scoring, applicationId),
+    ]);
+
+    if (emailResult.status === "fulfilled") {
+      console.log("✅ Email notification sent");
+    } else {
+      console.error("❌ Email error:", emailResult.reason);
     }
 
-    try {
-      await sendToEmail(data, scoring, applicationId);
-      console.log("✅ Email notification sent");
-    } catch (error) {
-      console.error("❌ Email error:", error);
-      // Продолжаем даже если Email упал
+    if (telegramResult.status === "fulfilled") {
+      console.log("✅ Telegram notification sent");
+    } else {
+      console.error("❌ Telegram error:", telegramResult.reason);
     }
 
     // Возвращаем успех после отправки уведомлений
