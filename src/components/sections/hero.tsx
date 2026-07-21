@@ -56,13 +56,13 @@ export function Hero() {
           {/* Заголовок */}
           <div className="mb-8 animate-fade-in">
             <h1
-              className="mb-5 text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl"
+              className="mb-4 text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl"
               style={{ textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}
             >
               Круизы по всему миру
             </h1>
             <p
-              className="mx-auto max-w-3xl text-xl font-light text-white sm:text-2xl md:text-3xl"
+              className="mx-auto max-w-3xl text-base font-light text-white sm:text-2xl md:text-3xl"
               style={{ textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}
             >
               Подберём идеальный круиз под ваши даты, бюджет и желания
@@ -78,7 +78,7 @@ export function Hero() {
           <div className="flex flex-col items-center gap-6 animate-fade-in-delay">
             <Link
               href="/quiz"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full w-full sm:w-auto px-8 sm:px-16 py-5 sm:py-8 text-lg sm:text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full w-full sm:w-auto px-8 sm:px-16 py-4 sm:py-8 text-base sm:text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
               style={{
                 background: "rgba(255,255,255,0.95)",
                 color: "#0f172a",

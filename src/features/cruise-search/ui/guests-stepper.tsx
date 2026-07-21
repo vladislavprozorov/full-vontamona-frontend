@@ -13,6 +13,8 @@ const MAX_GUESTS = 5;
 interface GuestsStepperProps {
   value: number;
   onChange: (value: number) => void;
+  /** Сообщаем наружу — чтобы строка поиска подсветила активную секцию */
+  onOpenChange?: (open: boolean) => void;
 }
 
 function StepperButton({
@@ -46,11 +48,16 @@ function StepperButton({
   );
 }
 
-export function GuestsStepper({ value, onChange }: GuestsStepperProps) {
+export function GuestsStepper({ value, onChange, onOpenChange }: GuestsStepperProps) {
   const [open, setOpen] = useState(false);
 
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    onOpenChange?.(next);
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger
         aria-label="Количество гостей"
         className="flex w-full items-center justify-between gap-2 rounded-lg text-left text-[15px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/10"

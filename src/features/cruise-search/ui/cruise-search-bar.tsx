@@ -31,20 +31,38 @@ interface CruiseSearchBarProps {
 
 const labelClass = "block text-[11px] uppercase tracking-wider text-neutral-500";
 
-/** Одна секция строки поиска */
+/** Какая секция строки сейчас активна */
+type ActiveField = "region" | "dates" | "nights" | "guests" | null;
+
+/**
+ * Одна секция строки поиска.
+ * Разделитель живёт на внешнем контейнере, а подсветка — на внутреннем,
+ * иначе скруглённый фон конфликтует с вертикальной чертой.
+ */
 function Field({
   label,
+  active = false,
   className,
   children,
 }: {
   label: string;
+  active?: boolean;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("px-4 py-2.5", className)}>
-      <span className={labelClass}>{label}</span>
-      <div className="mt-0.5">{children}</div>
+    <div className={cn("relative text-left", className)}>
+      <div
+        className={cn(
+          "rounded-2xl px-4 py-2.5 transition-all duration-200",
+          active
+            ? "bg-neutral-100 ring-1 ring-inset ring-neutral-200/70"
+            : "[@media(hover:hover)]:hover:bg-neutral-50",
+        )}
+      >
+        <span className={labelClass}>{label}</span>
+        <div className="mt-0.5">{children}</div>
+      </div>
     </div>
   );
 }
@@ -56,7 +74,13 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
   const [range, setRange] = useState<DateRange>({ from: defaults?.from, to: defaults?.to });
   const [nights, setNights] = useState(defaults?.nights ?? ANY);
   const [guests, setGuests] = useState(() => Number(defaults?.guests) || 2);
-  const [datesOpen, setDatesOpen] = useState(false);
+  const [activeField, setActiveField] = useState<ActiveField>(null);
+
+  const datesOpen = activeField === "dates";
+
+  /** Открылось — подсвечиваем секцию, закрылось — снимаем подсветку */
+  const toggleActive = (field: Exclude<ActiveField, null>) => (open: boolean) =>
+    setActiveField(open ? field : null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,8 +105,8 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
         className,
       )}
     >
-      <Field label="Направление" className="flex-1">
-        <Select value={region} onValueChange={setRegion}>
+      <Field label="Направление" active={activeField === "region"} className="flex-1">
+        <Select value={region} onValueChange={setRegion} onOpenChange={toggleActive("region")}>
           <SelectTrigger aria-label="Направление">
             <SelectValue />
           </SelectTrigger>
@@ -97,8 +121,12 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
         </Select>
       </Field>
 
-      <Field label="Когда" className="flex-1 border-neutral-200 md:border-l">
-        <Popover open={datesOpen} onOpenChange={setDatesOpen}>
+      <Field
+        label="Когда"
+        active={activeField === "dates"}
+        className="flex-1 border-neutral-200 md:border-l"
+      >
+        <Popover open={datesOpen} onOpenChange={toggleActive("dates")}>
           <PopoverTrigger
             aria-label="Даты отправления"
             className="flex w-full items-center justify-between gap-2 rounded-lg text-left text-[15px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/10"
@@ -119,15 +147,19 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
               onChange={(next) => {
                 setRange(next);
                 // Диапазон собран — закрываем, чтобы не мешал
-                if (next.from && next.to) setDatesOpen(false);
+                if (next.from && next.to) setActiveField(null);
               }}
             />
           </PopoverContent>
         </Popover>
       </Field>
 
-      <Field label="Длительность" className="flex-1 border-neutral-200 md:border-l">
-        <Select value={nights} onValueChange={setNights}>
+      <Field
+        label="Длительность"
+        active={activeField === "nights"}
+        className="flex-1 border-neutral-200 md:border-l"
+      >
+        <Select value={nights} onValueChange={setNights} onOpenChange={toggleActive("nights")}>
           <SelectTrigger aria-label="Длительность">
             <SelectValue />
           </SelectTrigger>
@@ -142,8 +174,12 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
         </Select>
       </Field>
 
-      <Field label="Гостей" className="border-neutral-200 md:w-40 md:border-l">
-        <GuestsStepper value={guests} onChange={setGuests} />
+      <Field
+        label="Гостей"
+        active={activeField === "guests"}
+        className="border-neutral-200 md:w-40 md:border-l"
+      >
+        <GuestsStepper value={guests} onChange={setGuests} onOpenChange={toggleActive("guests")} />
       </Field>
 
       <button
