@@ -3,8 +3,10 @@ import type { CruiseOffer } from "./cruise-catalog";
 export interface CruiseSearchQuery {
   /** Регион круиза */
   region?: string;
-  /** Месяц отправления в формате YYYY-MM */
-  month?: string;
+  /** Начало диапазона дат отправления, YYYY-MM-DD */
+  from?: string;
+  /** Конец диапазона дат отправления, YYYY-MM-DD */
+  to?: string;
   /** Длительность: "0-7" | "8-10" | "11+" */
   nights?: string;
   /**
@@ -34,22 +36,13 @@ export function filterCruises(
   return catalog
     .filter((cruise) => {
       if (query.region && cruise.region !== query.region) return false;
-      if (query.month && !cruise.departureDate.startsWith(query.month)) return false;
+      // Даты в ISO (YYYY-MM-DD) сравниваются лексикографически корректно
+      if (query.from && cruise.departureDate < query.from) return false;
+      if (query.to && cruise.departureDate > query.to) return false;
       if (query.nights && !matchesNights(cruise.nights, query.nights)) return false;
       return true;
     })
     .sort((a, b) => a.departureDate.localeCompare(b.departureDate));
-}
-
-/** Ближайшие 12 месяцев для выпадающего списка */
-export function getMonthOptions(from = new Date()): { value: string; label: string }[] {
-  const formatter = new Intl.DateTimeFormat("ru-RU", { month: "long", year: "numeric" });
-
-  return Array.from({ length: 12 }, (_, i) => {
-    const date = new Date(from.getFullYear(), from.getMonth() + i, 1);
-    const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-    return { value, label: formatter.format(date) };
-  });
 }
 
 export function formatPrice(priceFrom?: number): string {

@@ -24,7 +24,8 @@ export default async function CruiseSearchPage({
 
   const query: CruiseSearchQuery = {
     region: typeof params.region === "string" ? params.region : undefined,
-    month: typeof params.month === "string" ? params.month : undefined,
+    from: typeof params.from === "string" ? params.from : undefined,
+    to: typeof params.to === "string" ? params.to : undefined,
     nights: typeof params.nights === "string" ? params.nights : undefined,
     guests: typeof params.guests === "string" ? params.guests : undefined,
   };
