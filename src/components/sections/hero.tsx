@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CruiseSearchBar } from "@/features/cruise-search";
 import { HERO_POSTER_URL, HeroVideoPlayer, ScrollToWidgetButton } from "@/features/hero-video";
 
 export function Hero() {
@@ -44,7 +45,7 @@ export function Hero() {
       <div className="relative z-10 flex h-full items-center">
         <div className="mx-auto w-full max-w-4xl px-6 text-center">
           {/* Премиум-линия */}
-          <div className="mb-8 flex animate-fade-in items-center justify-center gap-4">
+          <div className="mb-6 flex animate-fade-in items-center justify-center gap-4">
             <div className="h-px w-12 bg-linear-to-r from-transparent to-white/40" />
             <span className="text-xs font-light tracking-[0.3em] text-white/60 uppercase">
               Vontamona Cruises
@@ -53,9 +54,9 @@ export function Hero() {
           </div>
 
           {/* Заголовок */}
-          <div className="mb-12 animate-fade-in">
+          <div className="mb-8 animate-fade-in">
             <h1
-              className="mb-6 text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl"
+              className="mb-5 text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl"
               style={{ textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}
             >
               Круизы по всему миру
@@ -66,6 +67,11 @@ export function Hero() {
             >
               Подберём идеальный круиз под ваши даты, бюджет и желания
             </p>
+          </div>
+
+          {/* ПОИСК ПО КАТАЛОГУ */}
+          <div className="mb-6 animate-fade-in-delay">
+            <CruiseSearchBar />
           </div>
 
           {/* CTA */}
