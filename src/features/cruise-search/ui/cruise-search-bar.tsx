@@ -1,25 +1,22 @@
 "use client";
 
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Minus, Plus, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CRUISE_REGIONS } from "../model/cruise-catalog";
 import { formatRangeLabel } from "../model/dates";
-import { type CruiseSearchQuery, NIGHTS_OPTIONS } from "../model/search";
+import { type CruiseSearchQuery, formatGuests, NIGHTS_OPTIONS } from "../model/search";
 import { type DateRange, DateRangeCalendar } from "./date-range-calendar";
-import { GuestsStepper } from "./guests-stepper";
+import { OptionList } from "./option-list";
 
-/** Radix не допускает пустую строку как значение — используем сентинел */
+/** «Любое значение» — пустая строка занята под сброс в URL-параметрах */
 const ANY = "any";
+
+const MIN_GUESTS = 1;
+const MAX_GUESTS = 5;
+
+type ActiveField = "region" | "dates" | "nights" | "guests";
 
 interface CruiseSearchBarProps {
   className?: string;
@@ -31,41 +28,103 @@ interface CruiseSearchBarProps {
 
 const labelClass = "block text-[11px] uppercase tracking-wider text-neutral-500";
 
-/** Какая секция строки сейчас активна */
-type ActiveField = "region" | "dates" | "nights" | "guests" | null;
-
-/**
- * Одна секция строки поиска.
- * Разделитель живёт на внешнем контейнере, а подсветка — на внутреннем,
- * иначе скруглённый фон конфликтует с вертикальной чертой.
- */
-function Field({
+/** Кликабельная секция строки. Вся область — кнопка, открывающая общую панель */
+function FieldButton({
   label,
-  active = false,
-  className,
-  children,
+  ariaLabel,
+  value,
+  active,
+  onClick,
 }: {
   label: string;
-  active?: boolean;
-  className?: string;
-  children: React.ReactNode;
+  ariaLabel: string;
+  value: string;
+  active: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className={cn("relative text-left", className)}>
-      <div
-        className={cn(
-          "rounded-2xl px-4 py-2.5 transition-all duration-200",
-          active
-            ? "bg-neutral-100 ring-1 ring-inset ring-neutral-200/70"
-            : "[@media(hover:hover)]:hover:bg-neutral-50",
-        )}
-      >
-        <span className={labelClass}>{label}</span>
-        <div className="mt-0.5">{children}</div>
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      aria-expanded={active}
+      onClick={onClick}
+      className={cn(
+        "w-full rounded-2xl px-4 py-2.5 text-left outline-none transition-all duration-200",
+        "focus-visible:ring-2 focus-visible:ring-neutral-900/10",
+        active
+          ? "bg-neutral-100 ring-1 ring-neutral-200/70 ring-inset"
+          : "[@media(hover:hover)]:hover:bg-neutral-50",
+      )}
+    >
+      <span className={labelClass}>{label}</span>
+      <span className="mt-0.5 flex items-center justify-between gap-2 font-medium text-[15px] text-neutral-900">
+        <span className="truncate">{value}</span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 shrink-0 text-neutral-400 transition-transform duration-200",
+            active && "rotate-180",
+          )}
+        />
+      </span>
+    </button>
+  );
+}
+
+/** Содержимое панели для «Гостей» — степпер −/+ */
+function GuestsPanel({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const stepperButton = (disabled: boolean) =>
+    cn(
+      "flex h-9 w-9 items-center justify-center rounded-full border transition-all",
+      "border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200",
+      !disabled &&
+        "hover:border-neutral-900 hover:text-neutral-900 active:scale-90 dark:hover:border-neutral-100 dark:hover:text-neutral-100",
+      disabled && "cursor-not-allowed border-neutral-200 text-neutral-300 dark:border-neutral-800",
+    );
+
+  return (
+    <div className="w-full p-4 md:w-72">
+      <div className="flex items-center justify-between gap-6">
+        <div>
+          <p className="font-medium text-[15px] text-neutral-900 dark:text-neutral-100">Гости</p>
+          <p className="mt-0.5 text-neutral-500 text-xs">Взрослых в каюте</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            aria-label="Убрать гостя"
+            disabled={value <= MIN_GUESTS}
+            onClick={() => onChange(Math.max(MIN_GUESTS, value - 1))}
+            className={stepperButton(value <= MIN_GUESTS)}
+          >
+            <Minus className="h-4 w-4" />
+          </button>
+          <span className="w-6 text-center font-medium text-[15px] text-neutral-900 tabular-nums dark:text-neutral-100">
+            {value}
+          </span>
+          <button
+            type="button"
+            aria-label="Добавить гостя"
+            disabled={value >= MAX_GUESTS}
+            onClick={() => onChange(Math.min(MAX_GUESTS, value + 1))}
+            className={stepperButton(value >= MAX_GUESTS)}
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
       </div>
+      <p className="mt-3 border-neutral-100 border-t pt-3 text-neutral-500 text-xs dark:border-neutral-800">
+        Максимум {MAX_GUESTS} гостей в каюте. Больше — подберём несколько кают.
+      </p>
     </div>
   );
 }
+
+const REGION_OPTIONS = [
+  { value: ANY, label: "Любое" },
+  ...CRUISE_REGIONS.map((r) => ({ value: r, label: r })),
+];
+
+const NIGHTS_PANEL_OPTIONS = [{ value: ANY, label: "Любая" }, ...NIGHTS_OPTIONS];
 
 export function CruiseSearchBar({ className, defaults, compact = false }: CruiseSearchBarProps) {
   const router = useRouter();
@@ -74,13 +133,59 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
   const [range, setRange] = useState<DateRange>({ from: defaults?.from, to: defaults?.to });
   const [nights, setNights] = useState(defaults?.nights ?? ANY);
   const [guests, setGuests] = useState(() => Number(defaults?.guests) || 2);
-  const [activeField, setActiveField] = useState<ActiveField>(null);
+  const [activeField, setActiveField] = useState<ActiveField | null>(null);
 
-  const datesOpen = activeField === "dates";
+  const formRef = useRef<HTMLFormElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const fieldRefs = useRef<Partial<Record<ActiveField, HTMLDivElement | null>>>({});
 
-  /** Открылось — подсвечиваем секцию, закрылось — снимаем подсветку */
-  const toggleActive = (field: Exclude<ActiveField, null>) => (open: boolean) =>
-    setActiveField(open ? field : null);
+  /**
+   * Позиция десктопной панели: под активной секцией, прижата к краям строки.
+   * Transform пишем напрямую в DOM (мимо React-state): layout-эффект успевает
+   * до первой отрисовки, а CSS-transition плавно анимирует последующие переезды.
+   */
+  const measure = useCallback((field: ActiveField) => {
+    const form = formRef.current;
+    const el = fieldRefs.current[field];
+    const panel = panelRef.current;
+    if (!form || !el || !panel) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return; // на мобильном панель в потоке
+
+    const maxX = Math.max(0, form.clientWidth - panel.offsetWidth);
+    const x = Math.min(el.offsetLeft, maxX);
+    const y = el.offsetTop + el.offsetHeight + 8;
+    panel.style.transform = `translate(${x}px, ${y}px)`;
+  }, []);
+
+  // Пересчёт позиции до отрисовки кадра — без мигания
+  useLayoutEffect(() => {
+    if (activeField) measure(activeField);
+  }, [activeField, measure]);
+
+  // Закрытие по клику снаружи и Escape; позиция — при ресайзе
+  useEffect(() => {
+    if (!activeField) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (!formRef.current?.contains(e.target as Node)) setActiveField(null);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveField(null);
+    };
+    const onResize = () => measure(activeField);
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [activeField, measure]);
+
+  const toggleField = (field: ActiveField) =>
+    setActiveField((prev) => (prev === field ? null : field));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,100 +200,157 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
     router.push(`/cruises/search?${params.toString()}`);
   };
 
+  const nightsLabel = NIGHTS_PANEL_OPTIONS.find((o) => o.value === nights)?.label ?? "Любая";
+
+  /** Общее содержимое панели (десктоп-поповер и мобильный аккордеон).
+      key={activeField} перемонтирует блок — CSS-анимация входа отыгрывает заново */
+  const panelContent = activeField && (
+    <div key={activeField} className="fade-in-0 slide-in-from-bottom-1 animate-in duration-150">
+      {activeField === "region" && (
+        <OptionList
+          options={REGION_OPTIONS}
+          value={region}
+          onSelect={(value) => {
+            setRegion(value);
+            setActiveField(null); // выбрал — панель закрылась, без сюрпризов
+          }}
+        />
+      )}
+
+      {activeField === "dates" && (
+        <div className="p-3 md:p-4">
+          <DateRangeCalendar
+            value={range}
+            onChange={(next) => {
+              setRange(next);
+              if (next.from && next.to) setActiveField(null);
+            }}
+          />
+        </div>
+      )}
+
+      {activeField === "nights" && (
+        <OptionList
+          options={NIGHTS_PANEL_OPTIONS}
+          value={nights}
+          onSelect={(value) => {
+            setNights(value);
+            setActiveField(null);
+          }}
+        />
+      )}
+
+      {activeField === "guests" && <GuestsPanel value={guests} onChange={setGuests} />}
+    </div>
+  );
+
+  /** Мобильный аккордеон: панель в потоке сразу под активным полем */
+  const inlinePanel = (field: ActiveField) =>
+    activeField === field && (
+      <div className="fade-in-0 slide-in-from-top-1 animate-in overflow-hidden duration-200 md:hidden">
+        <div className="my-1 rounded-2xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+          {panelContent}
+        </div>
+      </div>
+    );
+
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       className={cn(
-        "w-full rounded-2xl bg-white/95 p-2 backdrop-blur md:rounded-full",
+        "relative z-30 w-full rounded-2xl bg-white/95 p-2 backdrop-blur md:rounded-full",
         "flex flex-col gap-1 md:flex-row md:items-stretch md:gap-0",
         compact ? "border border-neutral-200 shadow-sm" : "shadow-2xl",
         className,
       )}
     >
-      <Field label="Направление" active={activeField === "region"} className="flex-1">
-        <Select value={region} onValueChange={setRegion} onOpenChange={toggleActive("region")}>
-          <SelectTrigger aria-label="Направление">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ANY}>Любое</SelectItem>
-            {CRUISE_REGIONS.map((r) => (
-              <SelectItem key={r} value={r}>
-                {r}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Field>
-
-      <Field
-        label="Когда"
-        active={activeField === "dates"}
-        className="flex-1 border-neutral-200 md:border-l"
+      <div
+        ref={(el) => {
+          fieldRefs.current.region = el;
+        }}
+        className="text-left md:flex-1"
       >
-        <Popover open={datesOpen} onOpenChange={toggleActive("dates")}>
-          <PopoverTrigger
-            aria-label="Даты отправления"
-            className="flex w-full items-center justify-between gap-2 rounded-lg text-left text-[15px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/10"
-          >
-            <span className={cn("truncate", !range.from && "text-neutral-900")}>
-              {formatRangeLabel(range.from, range.to)}
-            </span>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 shrink-0 text-neutral-400 transition-transform duration-200",
-                datesOpen && "rotate-180",
-              )}
-            />
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-auto">
-            <DateRangeCalendar
-              value={range}
-              onChange={(next) => {
-                setRange(next);
-                // Диапазон собран — закрываем, чтобы не мешал
-                if (next.from && next.to) setActiveField(null);
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </Field>
+        <FieldButton
+          label="Направление"
+          ariaLabel="Направление"
+          value={region === ANY ? "Любое" : region}
+          active={activeField === "region"}
+          onClick={() => toggleField("region")}
+        />
+      </div>
+      {inlinePanel("region")}
 
-      <Field
-        label="Длительность"
-        active={activeField === "nights"}
-        className="flex-1 border-neutral-200 md:border-l"
+      <div
+        ref={(el) => {
+          fieldRefs.current.dates = el;
+        }}
+        className="border-neutral-200 text-left md:flex-1 md:border-l"
       >
-        <Select value={nights} onValueChange={setNights} onOpenChange={toggleActive("nights")}>
-          <SelectTrigger aria-label="Длительность">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ANY}>Любая</SelectItem>
-            {NIGHTS_OPTIONS.map((n) => (
-              <SelectItem key={n.value} value={n.value}>
-                {n.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Field>
+        <FieldButton
+          label="Когда"
+          ariaLabel="Даты отправления"
+          value={formatRangeLabel(range.from, range.to)}
+          active={activeField === "dates"}
+          onClick={() => toggleField("dates")}
+        />
+      </div>
+      {inlinePanel("dates")}
 
-      <Field
-        label="Гостей"
-        active={activeField === "guests"}
-        className="border-neutral-200 md:w-40 md:border-l"
+      <div
+        ref={(el) => {
+          fieldRefs.current.nights = el;
+        }}
+        className="border-neutral-200 text-left md:flex-1 md:border-l"
       >
-        <GuestsStepper value={guests} onChange={setGuests} onOpenChange={toggleActive("guests")} />
-      </Field>
+        <FieldButton
+          label="Длительность"
+          ariaLabel="Длительность"
+          value={nightsLabel}
+          active={activeField === "nights"}
+          onClick={() => toggleField("nights")}
+        />
+      </div>
+      {inlinePanel("nights")}
+
+      <div
+        ref={(el) => {
+          fieldRefs.current.guests = el;
+        }}
+        className="border-neutral-200 text-left md:w-40 md:border-l"
+      >
+        <FieldButton
+          label="Гостей"
+          ariaLabel="Количество гостей"
+          value={formatGuests(guests)}
+          active={activeField === "guests"}
+          onClick={() => toggleField("guests")}
+        />
+      </div>
+      {inlinePanel("guests")}
 
       <button
         type="submit"
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 text-[15px] font-medium text-white transition-all hover:bg-neutral-800 active:scale-[0.98] md:px-9"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 font-medium text-[15px] text-white transition-all hover:bg-neutral-800 active:scale-[0.98] md:px-9"
       >
         <Search className="h-4 w-4" />
         Найти круиз
       </button>
+
+      {/* Десктоп: единая панель, переезжающая между секциями без закрытия.
+          Позиция через CSS-transition: первый кадр сразу в точке (layout-effect
+          успевает до отрисовки), дальнейшие переезды анимируются плавно */}
+      {activeField && (
+        <div className="absolute top-0 left-0 z-50 hidden md:block">
+          <div
+            ref={panelRef}
+            style={{ transition: "transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)" }}
+            className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-[0_24px_64px_-16px_rgba(0,0,0,0.28)] dark:border-neutral-800 dark:bg-neutral-900"
+          >
+            <div className="fade-in-0 animate-in duration-150">{panelContent}</div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

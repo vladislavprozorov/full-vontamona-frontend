@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -157,16 +156,15 @@ export function DateRangeCalendar({ value, onChange }: DateRangeCalendarProps) {
 
       {/*
         overflow-hidden — чтобы новый месяц «въезжал» из-за края.
-        Анимация только на появление (по смене key), без exit —
-        так надёжно, без залипаний mode="wait" при быстрых кликах.
+        CSS-анимация по смене key: перемонтирование запускает animate-in заново.
       */}
       <div className="overflow-hidden">
-        <motion.div
+        <div
           key={toISODate(baseMonth)}
-          initial={{ x: direction > 0 ? 28 : -28, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="flex gap-6"
+          className={cn(
+            "fade-in-0 flex animate-in gap-6 duration-200",
+            direction > 0 ? "slide-in-from-right-8" : "slide-in-from-left-8",
+          )}
         >
           <MonthGrid
             monthStart={baseMonth}
@@ -185,7 +183,7 @@ export function DateRangeCalendar({ value, onChange }: DateRangeCalendarProps) {
               onPick={handlePick}
             />
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-3 dark:border-neutral-800">
