@@ -16,6 +16,7 @@ import { CRUISE_REGIONS } from "../model/cruise-catalog";
 import { formatRangeLabel } from "../model/dates";
 import { type CruiseSearchQuery, NIGHTS_OPTIONS } from "../model/search";
 import { type DateRange, DateRangeCalendar } from "./date-range-calendar";
+import { GuestsStepper } from "./guests-stepper";
 
 /** Radix не допускает пустую строку как значение — используем сентинел */
 const ANY = "any";
@@ -54,7 +55,7 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
   const [region, setRegion] = useState(defaults?.region ?? ANY);
   const [range, setRange] = useState<DateRange>({ from: defaults?.from, to: defaults?.to });
   const [nights, setNights] = useState(defaults?.nights ?? ANY);
-  const [guests, setGuests] = useState(defaults?.guests ?? "2");
+  const [guests, setGuests] = useState(() => Number(defaults?.guests) || 2);
   const [datesOpen, setDatesOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -65,7 +66,7 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
     if (range.from) params.set("from", range.from);
     if (range.to) params.set("to", range.to);
     if (nights !== ANY) params.set("nights", nights);
-    if (guests) params.set("guests", guests);
+    params.set("guests", String(guests));
 
     router.push(`/cruises/search?${params.toString()}`);
   };
@@ -141,19 +142,8 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
         </Select>
       </Field>
 
-      <Field label="Гостей" className="border-neutral-200 md:w-32 md:border-l">
-        <Select value={guests} onValueChange={setGuests}>
-          <SelectTrigger aria-label="Количество гостей">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {[1, 2, 3, 4].map((g) => (
-              <SelectItem key={g} value={String(g)}>
-                {g}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <Field label="Гостей" className="border-neutral-200 md:w-40 md:border-l">
+        <GuestsStepper value={guests} onChange={setGuests} />
       </Field>
 
       <button

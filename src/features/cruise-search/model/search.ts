@@ -59,6 +59,16 @@ export function formatDepartureDate(iso: string): string {
   }).format(date);
 }
 
+/** Склонение: 1 гость / 2 гостя / 5 гостей */
+export function formatGuests(guests: number): string {
+  const lastTwo = guests % 100;
+  const last = guests % 10;
+  if (lastTwo >= 11 && lastTwo <= 14) return `${guests} гостей`;
+  if (last === 1) return `${guests} гость`;
+  if (last >= 2 && last <= 4) return `${guests} гостя`;
+  return `${guests} гостей`;
+}
+
 /** Склонение: 1 ночь / 2 ночи / 5 ночей */
 export function formatNights(nights: number): string {
   const lastTwo = nights % 100;
