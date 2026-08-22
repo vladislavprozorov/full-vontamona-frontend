@@ -139,11 +139,13 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
   const panelRef = useRef<HTMLDivElement>(null);
   const fieldRefs = useRef<Partial<Record<ActiveField, HTMLDivElement | null>>>({});
 
-  /**
-   * Позиция десктопной панели: под активной секцией, прижата к краям строки.
-   * Transform пишем напрямую в DOM (мимо React-state): layout-эффект успевает
-   * до первой отрисовки, а CSS-transition плавно анимирует последующие переезды.
-   */
+  const prevFieldRef = useRef<ActiveField | null>(null);
+  // Позиция десктопной панели (React владеет стилем — без гонок с реконциляцией)
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  // Плавный переезд включаем только при переходе между уже открытыми секциями
+  const [animateMove, setAnimateMove] = useState(false);
+
+  /** Позиция под активной секцией, прижата к краям строки */
   const measure = useCallback((field: ActiveField) => {
     const form = formRef.current;
     const el = fieldRefs.current[field];
@@ -152,14 +154,21 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
     if (window.matchMedia("(max-width: 767px)").matches) return; // на мобильном панель в потоке
 
     const maxX = Math.max(0, form.clientWidth - panel.offsetWidth);
-    const x = Math.min(el.offsetLeft, maxX);
-    const y = el.offsetTop + el.offsetHeight + 8;
-    panel.style.transform = `translate(${x}px, ${y}px)`;
+    setPos({
+      x: Math.min(el.offsetLeft, maxX),
+      y: el.offsetTop + el.offsetHeight + 8,
+    });
   }, []);
 
   // Пересчёт позиции до отрисовки кадра — без мигания
   useLayoutEffect(() => {
-    if (activeField) measure(activeField);
+    if (activeField) {
+      setAnimateMove(prevFieldRef.current !== null && prevFieldRef.current !== activeField);
+      measure(activeField);
+    } else {
+      setPos(null);
+    }
+    prevFieldRef.current = activeField;
   }, [activeField, measure]);
 
   // Закрытие по клику снаружи и Escape; позиция — при ресайзе
@@ -338,17 +347,20 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
       </button>
 
       {/* Десктоп: единая панель, переезжающая между секциями без закрытия.
-          Позиция через CSS-transition: первый кадр сразу в точке (layout-effect
-          успевает до отрисовки), дальнейшие переезды анимируются плавно */}
+          Transform двигает саму панель целиком (вместе с зоной кликов) —
+          никакой обёртки-фантома над кнопками, поэтому секции всегда кликабельны.
+          Стилем владеет React (pos/animateMove) — без императивной записи в DOM */}
       {activeField && (
-        <div className="absolute top-0 left-0 z-50 hidden md:block">
-          <div
-            ref={panelRef}
-            style={{ transition: "transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)" }}
-            className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-[0_24px_64px_-16px_rgba(0,0,0,0.28)] dark:border-neutral-800 dark:bg-neutral-900"
-          >
-            <div className="fade-in-0 animate-in duration-150">{panelContent}</div>
-          </div>
+        <div
+          ref={panelRef}
+          style={{
+            transform: pos ? `translate(${pos.x}px, ${pos.y}px)` : undefined,
+            transition: animateMove ? "transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+            visibility: pos ? "visible" : "hidden",
+          }}
+          className="absolute top-0 left-0 z-50 hidden overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-[0_24px_64px_-16px_rgba(0,0,0,0.28)] md:block dark:border-neutral-800 dark:bg-neutral-900"
+        >
+          <div className="fade-in-0 animate-in duration-150">{panelContent}</div>
         </div>
       )}
     </form>
