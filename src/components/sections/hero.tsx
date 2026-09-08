@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CruiseSearchBar } from "@/features/cruise-search";
 import { HERO_POSTER_URL, HeroVideoPlayer, ScrollToWidgetButton } from "@/features/hero-video";
 
 export function Hero() {
@@ -44,7 +45,7 @@ export function Hero() {
       <div className="relative z-10 flex h-full items-center">
         <div className="mx-auto w-full max-w-4xl px-6 text-center">
           {/* Премиум-линия */}
-          <div className="mb-8 flex animate-fade-in items-center justify-center gap-4">
+          <div className="mb-6 flex animate-fade-in items-center justify-center gap-4">
             <div className="h-px w-12 bg-linear-to-r from-transparent to-white/40" />
             <span className="text-xs font-light tracking-[0.3em] text-white/60 uppercase">
               Vontamona Cruises
@@ -53,26 +54,31 @@ export function Hero() {
           </div>
 
           {/* Заголовок */}
-          <div className="mb-12 animate-fade-in">
+          <div className="mb-8 animate-fade-in">
             <h1
-              className="mb-6 text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl"
+              className="mb-4 text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl"
               style={{ textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}
             >
               Круизы по всему миру
             </h1>
             <p
-              className="mx-auto max-w-3xl text-xl font-light text-white sm:text-2xl md:text-3xl"
+              className="mx-auto max-w-3xl text-base font-light text-white sm:text-2xl md:text-3xl"
               style={{ textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}
             >
               Подберём идеальный круиз под ваши даты, бюджет и желания
             </p>
           </div>
 
+          {/* ПОИСК ПО КАТАЛОГУ */}
+          <div className="mb-6 animate-fade-in-delay">
+            <CruiseSearchBar />
+          </div>
+
           {/* CTA */}
           <div className="flex flex-col items-center gap-6 animate-fade-in-delay">
             <Link
               href="/quiz"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full w-full sm:w-auto px-8 sm:px-16 py-5 sm:py-8 text-lg sm:text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full w-full sm:w-auto px-8 sm:px-16 py-4 sm:py-8 text-base sm:text-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
               style={{
                 background: "rgba(255,255,255,0.95)",
                 color: "#0f172a",
