@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/layout/header/header";
 import {
-  CRUISE_CATALOG,
   CruiseCard,
   CruiseSearchBar,
   type CruiseSearchQuery,
-  filterCruises,
+  searchCruises,
 } from "@/features/cruise-search";
 
 export const metadata: Metadata = {
@@ -30,7 +29,7 @@ export default async function CruiseSearchPage({
     guests: typeof params.guests === "string" ? params.guests : undefined,
   };
 
-  const results = filterCruises(CRUISE_CATALOG, query);
+  const results = await searchCruises(query);
 
   return (
     <>
@@ -59,8 +58,15 @@ export default async function CruiseSearchPage({
 
           {results.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {results.map((cruise) => (
-                <CruiseCard key={cruise.slug} cruise={cruise} />
+              {results.map((cruise, index) => (
+                // Карточки появляются каскадом — выдача «раскрывается», а не возникает разом
+                <div
+                  key={cruise.slug}
+                  className="fade-in-0 slide-in-from-bottom-3 animate-in duration-500"
+                  style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+                >
+                  <CruiseCard cruise={cruise} />
+                </div>
               ))}
             </div>
           ) : (

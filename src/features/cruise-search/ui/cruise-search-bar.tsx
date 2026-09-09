@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronDown, Minus, Plus, Search } from "lucide-react";
+import { ChevronDown, Loader2, Minus, Plus, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { CRUISE_REGIONS } from "../model/cruise-catalog";
 import { formatRangeLabel } from "../model/dates";
@@ -136,6 +136,8 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
   const [activeField, setActiveField] = useState<ActiveField | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
+  /** Пока Next готовит страницу результатов, кнопка показывает, что запрос принят */
+  const [isNavigating, startNavigation] = useTransition();
   const panelRef = useRef<HTMLDivElement>(null);
   const fieldRefs = useRef<Partial<Record<ActiveField, HTMLDivElement | null>>>({});
 
@@ -206,7 +208,11 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
     if (nights !== ANY) params.set("nights", nights);
     params.set("guests", String(guests));
 
-    router.push(`/cruises/search?${params.toString()}`);
+    // startTransition держит isNavigating=true до готовности новой страницы —
+    // клик получает мгновенный отклик вместо мёртвой паузы
+    startNavigation(() => {
+      router.push(`/cruises/search?${params.toString()}`);
+    });
   };
 
   const nightsLabel = NIGHTS_PANEL_OPTIONS.find((o) => o.value === nights)?.label ?? "Любая";
@@ -340,10 +346,15 @@ export function CruiseSearchBar({ className, defaults, compact = false }: Cruise
 
       <button
         type="submit"
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 font-medium text-[15px] text-white transition-all hover:bg-neutral-800 active:scale-[0.98] md:px-9"
+        disabled={isNavigating}
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 font-medium text-[15px] text-white transition-all hover:bg-neutral-800 active:scale-[0.98] disabled:cursor-wait disabled:opacity-90 md:px-9"
       >
-        <Search className="h-4 w-4" />
-        Найти круиз
+        {isNavigating ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Search className="h-4 w-4" />
+        )}
+        {isNavigating ? "Ищем…" : "Найти круиз"}
       </button>
 
       {/* Десктоп: единая панель, переезжающая между секциями без закрытия.

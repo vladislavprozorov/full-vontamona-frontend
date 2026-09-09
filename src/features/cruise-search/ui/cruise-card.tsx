@@ -42,7 +42,7 @@ export function CruiseCard({ cruise }: { cruise: CruiseOffer }) {
           {cruise.title}
         </h3>
         <p className="mt-1 text-sm text-neutral-500">
-          {cruise.ship} · {cruise.countries}
+          {[cruise.ship, cruise.countries].filter(Boolean).join(" · ")}
         </p>
 
         <dl className="mt-4 space-y-2 text-sm text-neutral-600 dark:text-neutral-400">

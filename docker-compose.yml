@@ -1,3 +1,7 @@
+# Имя проекта намеренно не задаём: оно берётся из имени папки
+# (full-vontamona-frontend). Задать своё — значит создать второй проект
+# рядом со старым, со всеми контейнерами заново.
+
 services:
   frontend:
     build:
@@ -9,12 +13,26 @@ services:
     environment:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
+      # Хост db — имя сервиса базы в соседнем compose-проекте (репозиторий cruise-database).
+      # Пароль берётся из .env рядом с этим файлом, в git он не хранится.
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    networks:
+      # default обязателен явно: как только у сервиса появляется секция networks,
+      # дефолтная сеть перестаёт подключаться сама — и Caddy потеряет frontend
+      - default
+      - cruise-net
     restart: unless-stopped
 
   caddy:
     image: caddy:2-alpine
     depends_on:
       - frontend
+    # format: raw обязателен. Bcrypt-хеш содержит $, и при обычном чтении .env
+    # compose принимает $cSdLpyu... за переменную и подставляет пустую строку —
+    # пароль на /admin тогда молча перестаёт работать.
+    env_file:
+      - path: .env
+        format: raw
     ports:
       - "80:80"
       - "443:443"
@@ -27,3 +45,8 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+
+networks:
+  # Общая сеть с базой. Создаётся один раз: docker network create cruise-net
+  cruise-net:
+    external: true

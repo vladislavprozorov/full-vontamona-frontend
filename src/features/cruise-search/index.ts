@@ -1,3 +1,8 @@
+export {
+  type CruiseDetails,
+  getPublishedCruiseBySlug,
+  searchCruises,
+} from "./model/cruise.queries";
 export type { CruiseOffer, CruiseRegion } from "./model/cruise-catalog";
 export { CRUISE_CATALOG, CRUISE_REGIONS } from "./model/cruise-catalog";
 export {

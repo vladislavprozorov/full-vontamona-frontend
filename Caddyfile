@@ -1,5 +1,14 @@
 vontamona.ru {
 	encode zstd gzip
+
+	# Админка закрыта паролем на уровне прокси — в приложении логина нет.
+	# Server Actions отправляют POST на URL текущей страницы, поэтому защита
+	# пути /admin* закрывает и изменение данных.
+	@admin path /admin /admin/*
+	basic_auth @admin {
+		{$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
+	}
+
 	reverse_proxy frontend:3000
 }
 

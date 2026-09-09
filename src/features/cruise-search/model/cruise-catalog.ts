@@ -12,27 +12,23 @@
  * чтобы перенос был механическим.
  */
 
-export const CRUISE_REGIONS = [
-  "Средиземное море",
-  "Карибы",
-  "Скандинавия",
-  "Аляска",
-  "Азия",
-] as const;
+import { CRUISE_REGIONS, type CruiseRegion, REGION_IMAGE } from "@/shared/cruise/regions";
 
-export type CruiseRegion = (typeof CRUISE_REGIONS)[number];
+export { CRUISE_REGIONS, REGION_IMAGE };
+export type { CruiseRegion };
 
 export interface CruiseOffer {
   slug: string;
   title: string;
   /** Лайнер */
   ship: string;
-  /** Круизная компания */
-  line: string;
+  /** Круизная компания. Нет в БД — заполнено только у записей из этого файла */
+  line?: string;
   region: CruiseRegion;
   /** Порт отправления */
   departurePort: string;
-  countries: string;
+  /** Страны маршрута. Нет в БД — заполнено только у записей из этого файла */
+  countries?: string;
   /** Дата отправления в формате ISO (YYYY-MM-DD) */
   departureDate: string;
   nights: number;
@@ -45,15 +41,6 @@ export interface CruiseOffer {
   /** true — демонстрационная запись с условными данными */
   isExample?: boolean;
 }
-
-/** Картинка по региону (локальные файлы уже есть в /public) */
-const REGION_IMAGE: Record<CruiseRegion, string> = {
-  "Средиземное море": "/images/destinations/mediterranean.jpg",
-  Карибы: "/images/destinations/caribbean.jpg",
-  Скандинавия: "/images/destinations/scandinavia.jpg",
-  Аляска: "/images/destinations/alaska.jpg",
-  Азия: "/images/destinations/asia.jpg",
-};
 
 export const CRUISE_CATALOG: readonly CruiseOffer[] = [
   // ✅ Реальные предложения
