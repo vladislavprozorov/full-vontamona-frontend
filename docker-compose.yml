@@ -10,6 +10,11 @@ services:
     # Не публикуем наружу 3000 — наружу идём через Caddy (80/443)
     expose:
       - "3000"
+    # Отсюда приложение берёт SMTP_* и TELEGRAM_* для формы заявок.
+    # format: raw — пароли могут содержать $, который compose иначе съест.
+    env_file:
+      - path: .env
+        format: raw
     environment:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
